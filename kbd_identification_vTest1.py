@@ -16,18 +16,17 @@ while True:
 		#print ('{0.action} on {0.device_path}'.format(device))
 		#print (type(device.action))
 
-		target_device_data.append(device.device_path) #data collection /// need improvement as statement to block list overloading
+		target_device_data.append(device.device_path) #data collection
 		try:
 			if device.action == "add":
 				for dev in target_device_data:
 					splitted = dev.split('/')
 					target = splitted[-1]
-					if re.match('event[0-9+]',target):
-						added_dev = str(evdev.InputDevice('/dev/input/{0}'.format(target))).split('/')
+					if re.match('event[0-9+]',target): #check of event.. param.
+						added_dev = str(evdev.InputDevice('/dev/input/{0}'.format(target))).split('/') #data collection about target device
 						#print (added_dev)
 						#re_addded_dev  = re.findall('.*name ".* Keyboard".*', added_dev[3])
-						if re.match('.*name ".* Keyboard".*', added_dev[3]):
+						if re.match('.*name ".* Keyboard".*', added_dev[3]): #check if target device is keyboard
 							print ('Keyboard added')
 		except Exception as e:
 			print (e)
-	#collected data output
