@@ -14,7 +14,6 @@ monitor.start()
 while True:
 	for device in iter(functools.partial(monitor.poll, 0), None):
 		#print ('{0.action} on {0.device_path}'.format(device))
-		#print (type(device.action))
 
 		target_device_data.append(device.device_path) #data collection
 		try:
