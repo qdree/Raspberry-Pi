@@ -10,31 +10,28 @@ def videoNameSet():
 	except NameError:
 		video_name = input("Enter file name: ")
 
+	pure_name = video_name.split('.')[0].lower()
+
 	try: #if logfile present
 		with open('logfile.txt', 'r+') as logfile:
-			logfile.write(video_name)
-			logfile.flush()
 			for line in logfile: #iterate though logfile
-				splitted = line.split('.') #create pure video name - without format
-				#print (splitted)
-				if splitted[0] == video_name: #check name is the same as in log
-					return splitted[0]
+				if line == pure_name: #check name is the same as in log
+					return line
 				else:
-					video_name.split(".") #if not, create pure video name to return
-					return video_name
+					lambda logfile: logfile.seek(0), logfile.truncate() #func for file's content cleanup
+					logfile.write(pure_name)
+					logfile.flush()
+					return pure_name
 
 	except IOError: #if no logfile
 		with open('logfile.txt', 'w') as logfile: #create file
-			video_name.split(".")
-			logfile.write(video_name)
+			logfile.write(pure_name)
 			logfile.flush() 
-		return video_name
-
-	
+		return pure_name
 
 
 def pathCreation(video_name):
-	pattern = re.compile(r'.*mp4 | .*mpeg | .*avi', flags = re.I | re.X | re.U) #pattern for regex
+	pattern = re.compile(r'(.*\.mp4) | (.*\.mpeg) | (.*\.avi)', flags = re.I | re.X | re.U) #pattern for regex
 	os.chdir('/media/')
 	try:
 		for dirName, curdirList, fileList in os.walk(os.getcwd()): #iterate through generator of pathes
@@ -42,9 +39,10 @@ def pathCreation(video_name):
 				full_path = os.path.join(dirName, file) #full path to file creation
 				re_file = str(pattern.findall(str(full_path))).split('/') #get all files matching the pattern 
 				if len(re_file) > 1:
-					file_name = re_file[-1].split('.')[0] #pure file name - without format
-					print (file_name)
-					if video_name == file_name: #check chosen file with gotten list
+					file_full_name = re_file[-1].translate(None, ',()[]\'\"') #chars to avoid in name
+					file_name = file_full_name.split('.')[0] #pure name without format
+					print (file_full_name)
+					if video_name == file_name.lower(): #check chosen file with files from a list
 						print (full_path)
 						return full_path
 
