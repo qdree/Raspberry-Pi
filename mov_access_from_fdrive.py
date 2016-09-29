@@ -41,9 +41,10 @@ def pathCreation(video_name):
 				if len(re_file) > 1:
 					file_full_name = re_file[-1].translate(None, ',()[]\'\"') #chars to avoid in name
 					file_name = file_full_name.split('.')[0] #pure name without format
-					print (file_full_name)
+					print ("Found : {0} located in :{1}".format(file_full_name, full_path))
+
 					if video_name == file_name.lower(): #check chosen file with files from a list
-						print (full_path)
+						print ('Path to target file : {0}'.format(full_path))
 						return full_path
 
 	except Exception as e:
