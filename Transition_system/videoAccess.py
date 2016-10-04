@@ -1,29 +1,27 @@
 import os
 import re
 
-def videoNameSet(fName):
-	pure_name = fName.split('.')[0].lower()
-
+def nameCheck(fName):
 	try: #if logfile present
 		with open('logfile.txt', 'r+') as logfile:
 			for line in logfile: #iterate though logfile
-				if line == pure_name: #check name is the same as in log
+				if line == fName or len(fName) < 1:
 					return line
 				else:
 					logfile.seek(0)
-					logfile.truncate() #func for file's content cleanup
-					logfile.write(pure_name)
+					logfile.truncate() #cleanup
+					logfile.write(fName)
 					logfile.flush()
-					return pure_name
+					return fName
 
 	except IOError: #if no logfile
 		with open('logfile.txt', 'w') as logfile: #create file
-			logfile.write(pure_name)
+			logfile.write(fName)
 			logfile.flush() 
-		return pure_name
+		return fName
 
-
-def pathCreation(video_name):
+def pathCreation(vName):
+	video_name = str(vName).split('.')[0].lower()
 	pattern = re.compile(r'(.*\.mp4) | (.*\.mpeg) | (.*\.avi) | (.*\.mkv)', flags = re.I | re.X | re.U) #pattern for regex
 	os.chdir('/media/')
 	try:
@@ -34,11 +32,11 @@ def pathCreation(video_name):
 				if len(re_file) > 1:
 					file_full_name = re_file[-1].translate(None, ',()[]\'\"') #chars to avoid in name
 					file_name = file_full_name.split('.')[0] #pure name without format
-					print ("Found : {0} located in :{1}".format(file_full_name, full_path))
-
+					
 					if video_name == file_name.lower(): #check chosen file with files from a list
 						print ('Path to target file : {0}'.format(full_path))
 						return full_path
-
+					else:
+						print ("Found : {0} located in :{1}".format(file_full_name, full_path))
 	except Exception as e:
 		print (e)
