@@ -5,6 +5,7 @@ import os
 import time 
 
 GPIO.setmode(GPIO.BCM)
+#GPIO.cleanup()
 GPIO.setup(18, GPIO.OUT) #LED pin
 GPIO.output(18, GPIO.LOW) #turn off LED
 
@@ -25,6 +26,7 @@ movie = (path)
 while not kbdIden():
 		pass
 print "Keyboard added"
+GPIO.output(18, GPIO.HIGH) #turn off LED
 
 #password check
 input_password = raw_input("ENTER PASSWORD:")
@@ -33,21 +35,22 @@ while not input_password == password:
 
 print ("Correct password!")
 
-if not active:
-	# os.system('vcgencmd display_power 1') #screen monitor switcher //ON
-	# time.sleep(1.5)
-	active = True
-	omxc = os.popen("omxplayer -b %s" %movie)
-	print ("\nplayer started")
-	player_active = True
-	sleep(1)
+#	if not active:
+		# os.system('vcgencmd display_power 1') #screen monitor switcher //ON
+		# time.sleep(1.5)
+#active = True
+omxc = os.popen("omxplayer -b %s" %movie)
+print ("\nplayer started")
+player_active = True
+#time.sleep(2)
 
 if (player_active and os.system("pidof omxplayer.bin") == 256):
 	print ("\nplayer is inactive")
 	player_active = False
-	active = False
-	print ("Door is opened!")
+#	active = False
 
-os.system("killall omxplayer.bin")
-GPIO,cleanup()
+print ("Door is opened!")
+
+#os.system("killall omxplayer.bin")
+
 print ("\nEnd of program!")
