@@ -2,23 +2,19 @@ from videoAccess import *
 from kbd_identification import *
 
 kbd_found = False
+correct_pwd = False
 password = "arsenal"
 
 #video setup before program workflow
 input_name = raw_input("Input name:")
-try:
-	pathCreation(nameCheck(input_name))
-except Exception as e:
-	print e
+pathCreation(nameCheck(input_name))
 
 #keyboard identification
-while not kbd_found:
-	while not kbdIden():
-		if kbdIden():
-			print 'Keyboard added'
-			kbd_found = True
+while not kbdIden():
+		pass
+print 'Keyboard added'
 
-input_password = raw_input("PASSWORD: ")
-
-if input_password.lower() == password:
-	print "Correct!!!!"
+#password check
+input_password = raw_input("ENTER PASSWORD:")
+while not input_password == password:
+	input_password = raw_input("ENTER PASSWORD:")
