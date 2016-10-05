@@ -12,7 +12,8 @@ GPIO.setmode(GPIO.BCM)
 GPIO.setup(18, GPIO.OUT) #LED pin
 GPIO.output(18, GPIO.LOW) #turn off LED
 
-#video setup before program workflow
+#video setup before program workflow 
+#test version. finaly name should be recieved from radio transmitter, not from input form
 input_name = raw_input("Input name:")
 path = pathCreation(nameCheck(input_name))
 movie = (path)
@@ -26,12 +27,14 @@ print "Keyboard added"
 
 GPIO.output(18, GPIO.HIGH) #turn off LED
 
-#password check
+#password check 
+#Test version, final one should have animated "PASSWORD" text with some animation of text input. Possibly will be created using PyGame
 input_password = raw_input("ENTER PASSWORD:")
 while not input_password == password:
 	input_password = raw_input("ENTER PASSWORD:")
 print ("Correct password!")
 
+#if possible following operation will be replaced with another one, which suspends screen but not disables it
 # os.system('vcgencmd display_power 1') #screen monitor switcher //ON
 # time.sleep(1.5)
 
@@ -46,7 +49,8 @@ while True:
 		print ("\nplayer is inactive")
 		player_active = False
 		break
-	
+
+#test output. final should unlock electrical magnet	
 print ("Door is opened!")
 #os.system("killall omxplayer.bin")
 
