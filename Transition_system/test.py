@@ -4,22 +4,19 @@ import RPi.GPIO as GPIO
 import os
 import time 
 
-GPIO.setmode(GPIO.BCM)
-#GPIO.cleanup()
-GPIO.setup(18, GPIO.OUT) #LED pin
-GPIO.output(18, GPIO.LOW) #turn off LED
-
-kbd_found = False
-correct_pwd = False
-active = False 
 player_active = False
 password = "arsenal"
+
+#pins setup
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(18, GPIO.OUT) #LED pin
+GPIO.output(18, GPIO.LOW) #turn off LED
 
 #video setup before program workflow
 input_name = raw_input("Input name:")
 path = pathCreation(nameCheck(input_name))
-
 movie = (path)
+
 # os.system('vcgencmd display_power 0') #screen monitor switcher //OFF
 
 #keyboard identification
@@ -35,24 +32,22 @@ while not input_password == password:
 	input_password = raw_input("ENTER PASSWORD:")
 print ("Correct password!")
 
-#	if not active:
-		# os.system('vcgencmd display_power 1') #screen monitor switcher //ON
-		# time.sleep(1.5)
-#active = True
+# os.system('vcgencmd display_power 1') #screen monitor switcher //ON
+# time.sleep(1.5)
+
+#video playback
 while True:
 	if not player_active:
 		omxc = os.popen("omxplayer -b %s" %movie)
 		print ("\nplayer started")
 		player_active = True
 		time.sleep(1)
-	if (player_active and os.system("pidof omxplayer.bin") == 256):
+	if (player_active and os.system("pidof omxplayer.bin") == 256): #check if player opened and process finished
 		print ("\nplayer is inactive")
 		player_active = False
 		break
-	#	active = False
-
+	
 print ("Door is opened!")
-
 #os.system("killall omxplayer.bin")
 
 print ("\nEnd of program!")
