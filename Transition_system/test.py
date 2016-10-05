@@ -39,15 +39,17 @@ print ("Correct password!")
 		# os.system('vcgencmd display_power 1') #screen monitor switcher //ON
 		# time.sleep(1.5)
 #active = True
-if not player_active:
-	omxc = os.popen("omxplayer -b %s" %movie)
-	print ("\nplayer started")
-	player_active = True
-	#time.sleep(2)
-elif (player_active and os.system("pidof omxplayer.bin") == 256):
-	print ("\nplayer is inactive")
-	player_active = False
-#	active = False
+while True:
+	if not player_active:
+		omxc = os.popen("omxplayer -b %s" %movie)
+		print ("\nplayer started")
+		player_active = True
+		time.sleep(1)
+	if (player_active and os.system("pidof omxplayer.bin") == 256):
+		print ("\nplayer is inactive")
+		player_active = False
+		break
+	#	active = False
 
 print ("Door is opened!")
 
