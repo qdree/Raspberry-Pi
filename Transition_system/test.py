@@ -28,7 +28,8 @@ print "Keyboard added"
 GPIO.output(18, GPIO.HIGH) #turn off LED
 
 #password check 
-#Test version, final one should have animated "PASSWORD" text with some animation of text input. Possibly will be created using PyGame
+#Test version, final one should have animated "PASSWORD" text with some animation of text input. 
+#Possibly will be created using PyGame
 input_password = raw_input("ENTER PASSWORD:")
 while not input_password == password:
 	input_password = raw_input("ENTER PASSWORD:")
