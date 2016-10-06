@@ -11,7 +11,6 @@ monitor.filter_by(subsystem = 'input')
 monitor.start()
 
 def kbdIden():
-	dev_couter = 0
 	target_device_data = [] #list to store recieved data about device
 	for device in iter(functools.partial(monitor.poll, 0), None):
 			#print ('{0.action} on {0.device_path}'.format(device))
@@ -27,10 +26,7 @@ def kbdIden():
 							#print (added_dev)
 							#re_addded_dev  = re.findall('.*name ".* Keyboard".*', added_dev[3])
 							if re.match('.*name ".* Keyboard".*', added_dev[3]): #check if target device is keyboard
-								dev_couter+=1
-							if dev_couter == 2:
 								print ('Added device is {}'.format(added_dev[3]))
-								dev_couter = 0
 								return True
 			except Exception as e:
 				print (e)
