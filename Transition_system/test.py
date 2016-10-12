@@ -1,5 +1,6 @@
 from videoAccess import *
 from kbd_identification import *
+from passPygame import *
 import RPi.GPIO as GPIO
 import os
 import time 
@@ -30,10 +31,13 @@ GPIO.output(18, GPIO.HIGH) #turn off LED
 #password check 
 #Test version, final one should have animated "PASSWORD" text with some animation of text input. 
 #Possibly will be created using PyGame
-input_password = raw_input("ENTER PASSWORD:")
-while not input_password == password:
-	input_password = raw_input("ENTER PASSWORD:")
-print ("Correct password!")
+# input_password = raw_input("ENTER PASSWORD:")
+# while not input_password == password:
+# 	input_password = raw_input("ENTER PASSWORD:")
+# print ("Correct password!")
+
+while not passChk():
+	pass
 
 #if possible following operation will be replaced with another one, which suspends screen but not disables it
 # os.system('vcgencmd display_power 1') #screen monitor switcher //ON
