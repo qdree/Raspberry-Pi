@@ -1,7 +1,7 @@
 from videoAccess import *
 from kbd_identification import *
 from passPygame import *
-# import RPi.GPIO as GPIO
+import RPi.GPIO as GPIO
 import os
 import time 
 
@@ -9,9 +9,9 @@ player_active = False
 password = "arsenal"
 
 #pins setup
-# GPIO.setmode(GPIO.BCM)
-# GPIO.setup(18, GPIO.OUT) #LED pin
-# GPIO.output(18, GPIO.LOW) #turn off LED
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(18, GPIO.OUT) #LED pin
+GPIO.output(18, GPIO.LOW) #turn off LED
 
 #video setup before program workflow 
 #test version. finaly name should be recieved from radio transmitter, not from input form
@@ -55,7 +55,7 @@ while True:
 		player_active = True
 		
 	current_time = time.time()
-	if (int(current_time - start_time) >= 1 and player_active and os.system("pidof omxplayer.bin") == 256): #check if player opened and process finished
+	if (float(current_time - start_time) >= 1 and player_active and os.system("pidof omxplayer.bin") == 256): #check if player opened and process finished
 		print current_time - start_time
 		print ("\nplayer is inactive")
 		player_active = False

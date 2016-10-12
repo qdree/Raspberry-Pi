@@ -10,7 +10,7 @@ def passChk(password):
     pygame.init()
 
     # create the screen
-    screen = pygame.display.set_mode((width,height))
+    screen = pygame.display.set_mode((width,height), FULLSCREEN)
     # screen = pygame.display.set_mode((1280,1024))
     
     # fill the screen black
@@ -34,6 +34,12 @@ def passChk(password):
         for event in events:
             # close it x button si pressed
             if event.type == QUIT: return
+            if event.type == KEYDOWN:
+				if event.key == K_F10:
+					pygame.display.set_mode((width,height), FULLSCREEN)
+				elif event.key == K_F11:
+					pygame.display.set_mode((width,height))
+					 
 
         # clear the screen
         screen.fill((0,0,0))
