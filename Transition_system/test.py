@@ -46,8 +46,9 @@ while True:
 		omxc = os.popen("omxplayer -b %s" %movie)
 		print ("\nplayer started")
 		player_active = True
-		current_time = time.time()
-	if (int(current_time - start_time) == 1.0 and player_active and os.system("pidof omxplayer.bin") == 256): #check if player opened and process finished
+		
+	current_time = time.time()
+	if (int(current_time - start_time) >= 1 and player_active and os.system("pidof omxplayer.bin") == 256): #check if player opened and process finished
 		print current_time - start_time
 		print ("\nplayer is inactive")
 		player_active = False
