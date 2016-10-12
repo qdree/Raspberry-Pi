@@ -39,7 +39,7 @@ while True:
 					omxc = os.popen('omxplayer -b %s' %movie)
 					print "\nplayer started"	
 					player_active = True	
-					sleep(1)
+						sleep(1)
 				start_button_state = start_button_control_check
 		previous_button_state = start_button_state
 			
