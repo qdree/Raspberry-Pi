@@ -1,7 +1,7 @@
 from videoAccess import *
 from kbd_identification import *
 from passPygame import *
-import RPi.GPIO as GPIO
+# import RPi.GPIO as GPIO
 import os
 import time 
 
@@ -9,9 +9,9 @@ player_active = False
 password = "arsenal"
 
 #pins setup
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(18, GPIO.OUT) #LED pin
-GPIO.output(18, GPIO.LOW) #turn off LED
+# GPIO.setmode(GPIO.BCM)
+# GPIO.setup(18, GPIO.OUT) #LED pin
+# GPIO.output(18, GPIO.LOW) #turn off LED
 
 #video setup before program workflow 
 #test version. finaly name should be recieved from radio transmitter, not from input form
@@ -26,7 +26,7 @@ while not kbdIden():
 		pass
 print "Keyboard added"
 
-GPIO.output(18, GPIO.HIGH) #turn off LED
+# GPIO.output(18, GPIO.HIGH) #turn off LED
 
 #password check 
 #Test version, final one should have animated "PASSWORD" text with some animation of text input. 
@@ -36,10 +36,13 @@ GPIO.output(18, GPIO.HIGH) #turn off LED
 # 	input_password = raw_input("ENTER PASSWORD:")
 # print ("Correct password!")
 
-while not passChk():
+#password check using pygame. 
+#!!!!!!!!!look for possibility of check after "Enter" button pressed (not necessary) 
+while not passChk(password):
 	pass
 
 #if possible following operation will be replaced with another one, which suspends screen but not disables it
+#!!!!!!!!!Black screen can be done by filling surface with black color.
 # os.system('vcgencmd display_power 1') #screen monitor switcher //ON
 # time.sleep(1.5)
 

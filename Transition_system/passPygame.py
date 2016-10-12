@@ -5,14 +5,13 @@ import gtk.gdk
 width = gtk.gdk.screen_width()
 height = gtk.gdk.screen_height()
 
-password = 'arsenal'
-
-def passChk():
+def passChk(password):
     # initialize pygame
     pygame.init()
 
     # create the screen
     screen = pygame.display.set_mode((width,height))
+    # screen = pygame.display.set_mode((1280,1024))
     
     # fill the screen black
     screen.fill((255,255,255))
@@ -48,8 +47,7 @@ def passChk():
             return True
         else:
             print "something wrong"
-            return False
-                    
+
         # blit txtbx on the sceen
         txtbx.draw(screen)
         
