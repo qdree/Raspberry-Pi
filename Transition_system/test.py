@@ -40,16 +40,18 @@ print ("Correct password!")
 # time.sleep(1.5)
 
 #video playback
+start_time = time.time()
 while True:
 	if not player_active:
 		omxc = os.popen("omxplayer -b %s" %movie)
 		print ("\nplayer started")
 		player_active = True
-		time.sleep(1)
-	if (player_active and os.system("pidof omxplayer.bin") == 256): #check if player opened and process finished
-		print ("\nplayer is inactive")
-		player_active = False
-		break
+	current_time = time.time()
+	if int(current_time - start_time) == 1.0:
+		if (player_active and os.system("pidof omxplayer.bin") == 256): #check if player opened and process finished
+			print ("\nplayer is inactive")
+			player_active = False
+			break
 
 #test output. final should unlock electrical magnet	
 print ("Door is opened!")
