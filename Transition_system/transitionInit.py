@@ -7,7 +7,7 @@ import gtk.gdk
 from pygame.locals import *
 import pygame, sys, eztext
 import RPi.GPIO as GPIO
-
+import time
 
 class Transition:
 	def __init__(self):
@@ -15,6 +15,7 @@ class Transition:
 		GPIO.setmode(GPIO.BCM)
 		GPIO.setup(18, GPIO.OUT) #LED pin
 		GPIO.output(18, GPIO.LOW) #turn off LED
+		GPIO.setwarnings(False)
 		
 		self.context = pyudev.Context()
 		self.monitor = pyudev.Monitor.from_netlink(self.context)
@@ -25,10 +26,8 @@ class Transition:
 
 		self.player_active = False #player activity flag
 
-
-
-	
 	def nameCheck(self, fName):
+		
 		try: #if logfile present
 			with open('logfile.txt', 'r+') as logfile:
 				for line in logfile: #iterate though logfile
@@ -47,27 +46,26 @@ class Transition:
 				logfile.flush() 
 			return fName
 
+		print fName
+		
 	def pathCreation(self, vName):
 		video_name = str(vName).split('.')[0].lower()
 		pattern = re.compile(r'(.*\.mp4) | (.*\.mpeg) | (.*\.avi) | (.*\.mkv)', flags = re.I | re.X | re.U) #pattern for regex
 		os.chdir('/media/')
-		try:
-			for dirName, curdirList, fileList in os.walk(os.getcwd()): #iterate through generator of pathes
-				for file in fileList:
-					full_path = os.path.join(dirName, file) #full path to file creation
-					re_file = str(pattern.findall(str(full_path))).split('/') #get all files matching the pattern 
-					if len(re_file) > 1:
-						file_full_name = re_file[-1].translate(None, ',()[]\'\"') #chars to avoid in name
-						file_name = file_full_name.split('.')[0] #pure name without format
-						
-						if video_name == file_name.lower(): #check chosen file with files from a list
-							print ('Path to target file : {0}'.format(full_path))
-							return full_path
-						else:
-							print ("Found : {0} located in :{1}".format(file_full_name, full_path))
-		except Exception as e:
-			print (e)
-	
+
+		for dirName, curdirList, fileList in os.walk(os.getcwd()): #iterate through generator of pathes
+			for file in fileList:
+				full_path = os.path.join(dirName, file) #full path to file creation
+				re_file = str(pattern.findall(str(full_path))).split('/') #get all files matching the pattern 
+				if len(re_file) > 1:
+					file_full_name = re_file[-1].translate(None, ',()[]\'\"') #chars to avoid in name
+					file_name = file_full_name.split('.')[0] #pure name without format
+					
+					if video_name == file_name.lower(): #check chosen file with files from a list
+						print ('Path to target file : {0}'.format(full_path))
+						return full_path
+					else:
+						print ("Found : {0} located in :{1}".format(file_full_name, full_path))
 
 	def videoPlayback(self, movie):
 		
@@ -128,9 +126,7 @@ class Transition:
 				if event.type == QUIT: return
 				if event.type == KEYDOWN:
 					if event.key == K_F10:
-						pygame.display.set_mode((self.width,self.height), FULLSCREEN)
-					elif event.key == K_F11:
-						pygame.display.set_mode((self.width,self.height))
+						quit()
 
 			screen.fill((0,0,0)) #clear the screen
 			text.update(events) #update text
@@ -144,3 +140,16 @@ class Transition:
 
 			text.draw(screen) #blit text on screen
 			pygame.display.flip() #refresh display
+			
+	def fillScreen(self, color):
+		pygame.init() #initialize pygame
+		screen = pygame.display.set_mode((self.width,self.height), FULLSCREEN) #create the screen
+		screen.fill(color) # fill the screen black
+		while True:
+			events = pygame.event.get()
+			
+			# process other events
+			for event in events:
+				if event.type == KEYDOWN:
+					if event.key == K_F10:
+						quit()
