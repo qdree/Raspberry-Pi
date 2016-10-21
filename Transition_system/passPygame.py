@@ -16,7 +16,7 @@ def passChk(password):
     # fill the screen black
     screen.fill((255,255,255))
 
-    txtbx = eztext.Input(maxlength=40, color=(255,255,255), prompt='PASSWORD:')
+    txtbx = eztext.Input(maxlength=40, color=(255,255,255), prompt='PASSWORD:', font = pygame.font.Font(None, 62))
     # create the pygame clock
     
     clock = pygame.time.Clock()
@@ -59,3 +59,6 @@ def passChk(password):
         
         # refresh the display
         pygame.display.flip()
+
+
+passChk("arsenal")
