@@ -7,9 +7,10 @@ context = pyudev.Context()
 monitor = pyudev.Monitor.from_netlink(context)
 monitor.filter_by(subsystem = 'input')
 
-monitor.start()
+
 
 def kbdIden():
+	monitor.start()
 	dev_couter = 0
 	target_device_data = [] #list to store recieved data about device
 	for device in iter(functools.partial(monitor.poll, 0), None):
