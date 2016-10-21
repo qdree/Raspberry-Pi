@@ -16,7 +16,7 @@ def passChk(password):
     # fill the screen black
     screen.fill((255,255,255))
 
-    txtbx = eztext.Input(maxlength=40, color=(255,255,255), prompt='PASSWORD:', font = pygame.font.Font(None, 62))
+    txtbx = eztext.Input(maxlength=40, color=(255,255,255), prompt='PASSWORD:')
     # create the pygame clock
     
     clock = pygame.time.Clock()
@@ -32,10 +32,11 @@ def passChk(password):
 
         # process other events
         for event in events:
+            mods = pygame.key.get_mods()
             # close it x button si pressed
             if event.type == QUIT: return
             if event.type == KEYDOWN:
-				if event.key == K_F10:
+				if event.key == K_F10 and mods & pygame.KMOD_RSHIFT and mods & pygame.KMOD_CTRL:
 					pygame.display.set_mode((width,height), FULLSCREEN)
 				elif event.key == K_F11:
 					pygame.display.set_mode((width,height))
