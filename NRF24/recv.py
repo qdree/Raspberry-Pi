@@ -12,7 +12,7 @@ import spidev
 
 
 
-pipes = [[0xAB, 0xCD, 0xAB, 0xCD, 0x71], [0xF0, 0xF0, 0xF0, 0xF0, 0xE1]]
+pipes = [[0xF0, 0xF0, 0xF0, 0xF0, 0xE1], [0xF0, 0xF0, 0xF0, 0xF0, 0xE2], [0xAB, 0xCD, 0xAB, 0xCD, 0x71], [0xAB, 0xCD, 0xAB, 0xCD, 0x72]]
 
 radio = NRF24(GPIO, spidev.SpiDev())
 radio.begin(0, 17)
@@ -28,24 +28,23 @@ radio.setAutoAck(True)
 radio.enableDynamicPayloads()
 radio.enableAckPayload()
 
-radio.openWritingPipe(pipes[1])
-radio.openReadingPipe(1, pipes[0])
+#radio.openWritingPipe(pipes[0])
+radio.openReadingPipe(1, pipes[2])
+radio.openReadingPipe(2, pipes[3])
 
 radio.printDetails()
-#time.sleep(3)
-
-radio.startListening()
+#radio.startListening()
 
 while True:
-	#ackPL = ['R','e', 'c', 'e', 'i', 'v', 'e', 'd']
-	ackPL = [222222222]
+	radio.startListening()
+	ackPL1 = [1]
+	ackPL2 = [2]
 	while not radio.available(0):
 		time.sleep(1/100)
 
 	recv_message = []
 	radio.read(recv_message, radio.getDynamicPayloadSize())
-	print ("Received:")
-	print (recv_message)
+	print ("Received: {}".format(recv_message))
 	print ("Translating the received message...")
 	string = ""
 	for n in recv_message:
@@ -53,5 +52,10 @@ while True:
 		if (n >= 32 and n <= 126):
 			string += chr(n)
 	print (string)
-	radio.writeAckPayload(1, ackPL, len(ackPL))
-	print ("Loaded payload reply of {}".format(ackPL))
+	radio.openWritingPipe(pipes[0])
+	radio.writeAckPayload(1, ackPL1, len(ackPL1))
+	radio.stopListening()
+#	radio.startListening()
+	radio.openWritingPipe(pipes[1])
+	radio.writeAckPayload(2, ackPL2, len(ackPL2))
+	print ("Loaded payload reply of {0}, to first dev and {1} to second".format(ackPL1, ackPL2))
