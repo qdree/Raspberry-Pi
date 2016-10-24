@@ -1,10 +1,26 @@
 from  transitionInit import *
+
 def wait(seconds):
 	start_time = time.time()
 	while True:
 		current_time = time.time()
 		if current_time - start_time == seconds:
 			return
+
+def dataReceive():
+	while not radio.available(0):
+	wait(1/100)
+
+	recv_message = []
+	radio.read(recv_message, radio.getDynamicPayloadSize())
+	print ("Received: {}".format(recv_message))
+	print ("Translating the received message...")
+	string = ""
+	for n in recv_message:
+		# Decode into standart unicode set
+		if (n >= 32 and n <= 126):
+			string += chr(n)
+			return string.lower()		
 
 pipes = [[0xF0, 0xF0, 0xF0, 0xF0, 0xE4], [0xAB, 0xCD, 0xAB, 0xCD, 0x74]]
 radio.begin(0, 17)
@@ -24,30 +40,18 @@ ackPL = [0]
 ackPL1 = [1]
 ackPL2 = [2]
 
-while not re.match('.+english.+ | .+german.+', string): #wait for video name, to set quest language
-	while not radio.available(0):
-		wait(1/100)
-
-	recv_message = []
-	radio.read(recv_message, radio.getDynamicPayloadSize())
-	print ("Received: {}".format(recv_message))
-	print ("Translating the received message...")
-	string = ""
-	for n in recv_message:
-		# Decode into standart unicode set
-		if (n >= 32 and n <= 126):
-			string += chr(n)
-	string = string.lower()
+while not re.match('.+english.+ | .+german.+', dataReceive()): #wait for video name, to set quest language
+	dataReceive()
 	radio.writeAckPayload(1, ackPL, len(ackPL)) #send acknowledgement that video name recognized
 
-video_name = string
+video_name = name_from_rad
 
 while True:
-
-	if string == "by_pass":
+	received_string = dataReceive()
+	if received_string == "by_pass":
 		radio.writeAckPayload(1, ackPL1, len(ackPL1)) #send acknowledgement about by_pass operation
 		break
-	elif string == "open_door":
+	elif received_string == "open_door":
 		radio.writeAckPayload(1, ackPL2, len(ackPL2)) #send acknowledgement about open_door operation
 		tr_sys = Transition()
 		path = tr_sys.pathCreation(tr_sys.nameCheck(video_name)) #create address to the video
