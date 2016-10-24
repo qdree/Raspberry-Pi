@@ -8,6 +8,8 @@ from pygame.locals import *
 import pygame, sys, eztext
 import RPi.GPIO as GPIO
 import time
+from lib_nrf24 import NRF24
+import spidev
 
 class Transition:
 	def __init__(self):
@@ -16,6 +18,12 @@ class Transition:
 		GPIO.setup(18, GPIO.OUT) #LED pin
 		GPIO.output(18, GPIO.LOW) #turn off LED
 		GPIO.setwarnings(False)
+		
+		radio = NRF24(GPIO, spidev.SpiDev())
+		radio.setRetries(0,15)
+		radio.setAutoAck(True)
+		radio.enableDynamicPayloads()
+		radio.enableAckPayload()
 		
 		self.context = pyudev.Context()
 		self.monitor = pyudev.Monitor.from_netlink(self.context)
