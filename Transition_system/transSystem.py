@@ -25,7 +25,7 @@ def dataReceive():
 			return string.lower()		
 
 pipes = [[0xF0, 0xF0, 0xF0, 0xF0, 0xE4], [0xAB, 0xCD, 0xAB, 0xCD, 0x74]]
-#radio.begin(0, 17)
+radio.begin(0, 17)
 radio.setPayloadSize(25)
 radio.setChannel(0x76)
 radio.setDataRate(NRF24.BR_1MBPS)
@@ -37,17 +37,18 @@ radio.startListening()
 radio.printDetails()
 
 password = "arsenal"
+video_name = ''
 
 # input_name = raw_input("Input name:")
 ackPL = [0]
 ackPL1 = [1]
 ackPL2 = [2]
 
-while not re.match('.+english.+ | .+german.+', dataReceive()): #wait for video name, to set quest language
-	dataReceive()
+while not re.match('.+english.+ | .+german.+', video_name): #wait for video name, to set quest language
+	video_name = dataReceive()
 	radio.writeAckPayload(1, ackPL, len(ackPL)) #send acknowledgement that video name recognized
 
-video_name = name_from_rad
+#video_name = name_from_rad
 
 while True:
 	received_string = dataReceive()

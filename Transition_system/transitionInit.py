@@ -22,7 +22,6 @@ class Transition:
 		GPIO.setwarnings(False)
 		
 		radio.begin(0,17)
-#		radio = NRF24(GPIO, spidev.SpiDev())
 		radio.setRetries(0,15)
 		radio.setAutoAck(True)
 		radio.enableDynamicPayloads()
