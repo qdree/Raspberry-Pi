@@ -1,5 +1,7 @@
 from  transitionInit import *
 
+tr_sys = Transition()
+
 def wait(seconds):
 	start_time = time.time()
 	while True:
@@ -9,7 +11,7 @@ def wait(seconds):
 
 def dataReceive():
 	while not radio.available(0):
-	wait(1/100)
+		wait(1/100)
 
 	recv_message = []
 	radio.read(recv_message, radio.getDynamicPayloadSize())
@@ -23,7 +25,7 @@ def dataReceive():
 			return string.lower()		
 
 pipes = [[0xF0, 0xF0, 0xF0, 0xF0, 0xE4], [0xAB, 0xCD, 0xAB, 0xCD, 0x74]]
-radio.begin(0, 17)
+#radio.begin(0, 17)
 radio.setPayloadSize(25)
 radio.setChannel(0x76)
 radio.setDataRate(NRF24.BR_1MBPS)
@@ -32,6 +34,7 @@ radio.setPALevel(NRF24.PA_MAX)
 radio.openWritingPipe(pipes[0])
 radio.openReadingPipe(1, pipes[1])
 radio.startListening()
+radio.printDetails()
 
 password = "arsenal"
 
@@ -53,7 +56,7 @@ while True:
 		break
 	elif received_string == "open_door":
 		radio.writeAckPayload(1, ackPL2, len(ackPL2)) #send acknowledgement about open_door operation
-		tr_sys = Transition()
+#		tr_sys = Transition()
 		path = tr_sys.pathCreation(tr_sys.nameCheck(video_name)) #create address to the video
 		#path = tr_sys.pathCreation("samplevideo")
 
@@ -64,7 +67,7 @@ while True:
 			events = pygame.event.get() 
 			# process other events
 			for event in events:
-		        mods = pygame.key.get_mods()
+				mods = pygame.key.get_mods()
 				if event.type == KEYDOWN:
 					if event.key == K_F10 and mods & pygame.KMOD_RSHIFT and mods & pygame.KMOD_CTRL: #program exit combination
 						quit()

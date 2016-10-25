@@ -11,6 +11,8 @@ import time
 from lib_nrf24 import NRF24
 import spidev
 
+radio = NRF24(GPIO, spidev.SpiDev())
+
 class Transition:
 	def __init__(self):
 		
@@ -19,7 +21,8 @@ class Transition:
 		GPIO.output(18, GPIO.LOW) #turn off LED
 		GPIO.setwarnings(False)
 		
-		radio = NRF24(GPIO, spidev.SpiDev())
+		radio.begin(0,17)
+#		radio = NRF24(GPIO, spidev.SpiDev())
 		radio.setRetries(0,15)
 		radio.setAutoAck(True)
 		radio.enableDynamicPayloads()
@@ -131,7 +134,7 @@ class Transition:
 
 			# process other events
 			for event in events:
-	            mods = pygame.key.get_mods()
+				mods = pygame.key.get_mods()
 				if event.type == QUIT: return
 				if event.type == KEYDOWN:
 					if event.key == K_F10 and mods & pygame.KMOD_RSHIFT and mods & pygame.KMOD_CTRL:
