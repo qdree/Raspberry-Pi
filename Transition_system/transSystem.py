@@ -7,60 +7,63 @@ def wait(seconds):
 	while True:
 		current_time = time.time()
 		if current_time - start_time == seconds:
-			return
+			break
 
-def dataReceive():
-	while not radio.available(0):
-		wait(1/100)
-
-	recv_message = []
-	radio.read(recv_message, radio.getDynamicPayloadSize())
-	print ("Received: {}".format(recv_message))
-	print ("Translating the received message...")
+def dataReceive(find_that, ack):
+	pattern = re.compile(find_that, flags = re.I | re.X | re.U)
 	string = ""
-	for n in recv_message:
-		# Decode into standart unicode set
-		if (n >= 32 and n <= 126):
-			string += chr(n)
-			return string.lower()		
+	while True:
+		if radio.available(0):
+			recv_message = []
+			radio.read(recv_message, radio.getDynamicPayloadSize())
+			print ("Received: {}".format(recv_message))
+			print ("Translating the received message...")
+			
+			for n in recv_message:
+				# Decode into standart unicode set
+				if (n >= 32 and n <= 126):
+					string += chr(n)
+			print (string)
+			if pattern.match(string):
+				radio.writeAckPayload(1, ack, len(ack)) #send acknowledgement
+				print ("Loaded payload reply of {}".format(ack))
+				return string
+			else:
+				string = ''
+	
 
-pipes = [[0xF0, 0xF0, 0xF0, 0xF0, 0xE4], [0xAB, 0xCD, 0xAB, 0xCD, 0x74]]
-radio.begin(0, 17)
+pipes = [[0xAB, 0xCD, 0xAB, 0xCD, 0x71], [0xF0, 0xF0, 0xF0, 0xF0, 0xE1]]
+radio.begin(0,17)
+radio.setRetries(0,15)
 radio.setPayloadSize(25)
 radio.setChannel(0x76)
 radio.setDataRate(NRF24.BR_1MBPS)
 radio.setPALevel(NRF24.PA_MAX)
+radio.setAutoAck(True)
+radio.enableDynamicPayloads()
+radio.enableAckPayload()
 
-radio.openWritingPipe(pipes[0])
-radio.openReadingPipe(1, pipes[1])
+radio.openWritingPipe(pipes[1])
+radio.openReadingPipe(1, pipes[0])
 radio.startListening()
 radio.printDetails()
 
 password = "arsenal"
-video_name = ''
 
-# input_name = raw_input("Input name:")
+#input_name = raw_input("Input name:")
 ackPL = [0]
 ackPL1 = [1]
 ackPL2 = [2]
 
-while not re.match('.+english.+ | .+german.+', video_name): #wait for video name, to set quest language
-	video_name = dataReceive()
-	radio.writeAckPayload(1, ackPL, len(ackPL)) #send acknowledgement that video name recognized
-
-#video_name = name_from_rad
+video_name = dataReceive("(.*english.*) | (.*german.*)", ackPL)
+print "video name chosen"
 
 while True:
-	received_string = dataReceive()
-	if received_string == "by_pass":
-		radio.writeAckPayload(1, ackPL1, len(ackPL1)) #send acknowledgement about by_pass operation
+	if dataReceive(".*by_pass.*", ackPL1) == "by_pass":
 		break
-	elif received_string == "open_door":
+	elif dataReceive(".*open_door.*", ackPL1) == "open_door":
 		radio.writeAckPayload(1, ackPL2, len(ackPL2)) #send acknowledgement about open_door operation
-#		tr_sys = Transition()
 		path = tr_sys.pathCreation(tr_sys.nameCheck(video_name)) #create address to the video
-		#path = tr_sys.pathCreation("samplevideo")
-
 		pygame.init() #initialize pygame
 		screen = pygame.display.set_mode((tr_sys.width,tr_sys.height), FULLSCREEN) #create the screen
 		screen.fill((0,0,0)) # fill the screen black
@@ -80,6 +83,9 @@ while True:
 
 		tr_sys.videoPlayback(path) #run video from path
 		break
+	else:
+		print "Unknown command"
 
 print "Door is opened"
 tr_sys.fillScreen((0,0,0))
+

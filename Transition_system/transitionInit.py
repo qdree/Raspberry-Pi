@@ -11,22 +11,17 @@ import time
 from lib_nrf24 import NRF24
 import spidev
 
+#radio = NRF24(GPIO, spidev.SpiDev())
+GPIO.setmode(GPIO.BCM)
 radio = NRF24(GPIO, spidev.SpiDev())
 
 class Transition:
 	def __init__(self):
 		
-		GPIO.setmode(GPIO.BCM)
 		GPIO.setup(18, GPIO.OUT) #LED pin
 		GPIO.output(18, GPIO.LOW) #turn off LED
 		GPIO.setwarnings(False)
-		
-		radio.begin(0,17)
-		radio.setRetries(0,15)
-		radio.setAutoAck(True)
-		radio.enableDynamicPayloads()
-		radio.enableAckPayload()
-		
+				
 		self.context = pyudev.Context()
 		self.monitor = pyudev.Monitor.from_netlink(self.context)
 		self.monitor.filter_by(subsystem = 'input')
