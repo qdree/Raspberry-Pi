@@ -156,6 +156,8 @@ class Transition:
 			
 			# process other events
 			for event in events:
+				mods = pygame.key.get_mods()
+				if event.type == QUIT: return
 				if event.type == KEYDOWN:
-					if event.key == K_F10:
+					if event.key == K_F10 and mods & pygame.KMOD_RSHIFT and mods & pygame.KMOD_CTRL:
 						quit()
