@@ -43,7 +43,7 @@ class VideoSetup:
 		print fName
 		
 	def pathCreation(self, vName):
-		video_name = str(vName).split('.')[0].lower()
+		video_lang = str(vName).split('.')[0].lower()
 		pattern = re.compile(r'(.*\.mp4) | (.*\.mpeg) | (.*\.avi) | (.*\.mkv)', flags = re.I | re.X | re.U) #pattern for regex
 		os.chdir('/media/')
 
@@ -55,7 +55,8 @@ class VideoSetup:
 					file_full_name = re_file[-1].translate(None, ',()[]\'\"') #chars to avoid in name
 					file_name = file_full_name.split('.')[0] #pure name without format
 					
-					if video_name == file_name.lower(): #check chosen file with files from a list
+					if re.match("(.*{}.*)".format(video_lang), file_name):
+					#if video_name == file_name.lower(): #check chosen file with files from a list
 						print ('Path to target file : {0}'.format(full_path))
 						return full_path
 					else:
