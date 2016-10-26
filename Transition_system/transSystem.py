@@ -2,6 +2,29 @@ from  transitionInit import *
 
 tr_sys = Transition()
 
+pipes = [[0xAB, 0xCD, 0xAB, 0xCD, 0x71], [0xF0, 0xF0, 0xF0, 0xF0, 0xE1]]
+radio.begin(0,17)
+radio.setRetries(0,15)
+radio.setPayloadSize(25)
+radio.setChannel(0x76)
+radio.setDataRate(NRF24.BR_1MBPS)
+radio.setPALevel(NRF24.PA_MAX)
+radio.setAutoAck(True)
+radio.enableDynamicPayloads()
+radio.enableAckPayload()
+
+radio.openWritingPipe(pipes[1])
+radio.openReadingPipe(1, pipes[0])
+radio.startListening()
+radio.printDetails()
+
+password = "arsenal"
+
+#input_name = raw_input("Input name:")
+ackPL = [0]
+ackPL1 = [1]
+ackPL2 = [2]
+
 def wait(seconds):
 	start_time = time.time()
 	while True:
@@ -31,31 +54,9 @@ def dataReceive(find_that, ack):
 			else:
 				string = ''
 	
-
-pipes = [[0xAB, 0xCD, 0xAB, 0xCD, 0x71], [0xF0, 0xF0, 0xF0, 0xF0, 0xE1]]
-radio.begin(0,17)
-radio.setRetries(0,15)
-radio.setPayloadSize(25)
-radio.setChannel(0x76)
-radio.setDataRate(NRF24.BR_1MBPS)
-radio.setPALevel(NRF24.PA_MAX)
-radio.setAutoAck(True)
-radio.enableDynamicPayloads()
-radio.enableAckPayload()
-
-radio.openWritingPipe(pipes[1])
-radio.openReadingPipe(1, pipes[0])
-radio.startListening()
-radio.printDetails()
-
-password = "arsenal"
-
-#input_name = raw_input("Input name:")
-ackPL = [0]
-ackPL1 = [1]
-ackPL2 = [2]
-
 video_name = dataReceive("(.*english.*) | (.*german.*)", ackPL)
+path = tr_sys.pathCreation(tr_sys.nameCheck(video_name)) #create address to the video
+
 print "video name chosen"
 
 while True:
@@ -63,7 +64,6 @@ while True:
 		break
 	elif dataReceive(".*open_door.*", ackPL1) == "open_door":
 		radio.writeAckPayload(1, ackPL2, len(ackPL2)) #send acknowledgement about open_door operation
-		path = tr_sys.pathCreation(tr_sys.nameCheck(video_name)) #create address to the video
 		pygame.init() #initialize pygame
 		screen = pygame.display.set_mode((tr_sys.width,tr_sys.height), FULLSCREEN) #create the screen
 		screen.fill((0,0,0)) # fill the screen black
@@ -88,4 +88,3 @@ while True:
 
 print "Door is opened"
 tr_sys.fillScreen((0,0,0))
-
