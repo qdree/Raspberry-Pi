@@ -11,9 +11,9 @@ class VideoSetup:
 
 		GPIO.setwarnings(False)
 			
-		self.context = pyudev.Context()
-		self.monitor = pyudev.Monitor.from_netlink(self.context)
-		self.monitor.filter_by(subsystem = 'input')
+#		self.context = pyudev.Context()
+#		self.monitor = pyudev.Monitor.from_netlink(self.context)
+#		self.monitor.filter_by(subsystem = 'input')
 
 		self.width = gtk.gdk.screen_width() #get screen width
 		self.height = gtk.gdk.screen_height() #get screen height
