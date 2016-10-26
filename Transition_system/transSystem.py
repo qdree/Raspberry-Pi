@@ -25,12 +25,6 @@ ackPL = [0]
 ackPL1 = [1]
 ackPL2 = [2]
 
-def wait(seconds):
-	start_time = time.time()
-	while True:
-		current_time = time.time()
-		if current_time - start_time == seconds:
-			break
 
 def dataReceive(find_that, ack):
 	pattern = re.compile(find_that, flags = re.I | re.X | re.U)
