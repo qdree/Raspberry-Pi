@@ -1,14 +1,8 @@
-import re
-import os
-import gtk.gdk
+import re, os, gtk.gdk, pygame, sys, time, spidev
 from pygame.locals import *
-import pygame, sys, eztext
 import RPi.GPIO as GPIO
-import time
 from lib_nrf24 import NRF24
-import spidev
 
-#radio = NRF24(GPIO, spidev.SpiDev())
 GPIO.setmode(GPIO.BCM)
 radio = NRF24(GPIO, spidev.SpiDev())
 
