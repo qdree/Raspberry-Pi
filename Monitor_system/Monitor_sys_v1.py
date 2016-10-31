@@ -36,23 +36,34 @@ while True:
 	screen.fill((0,0,0)) # fill the screen black
 	print "..."
 	while not mon_comm.dataReceive(".*OnHand.*", ackPL1) == "onhand": #wait correct message
-		events = pygame.event.get() 
-		# process other events
-		for event in events:
-			mods = pygame.key.get_mods()
-			if event.type == KEYDOWN:
-				if event.key == K_F10 and mods & pygame.KMOD_RSHIFT and mods & pygame.KMOD_CTRL: #program exit combination
-					quit()
+		# events = pygame.event.get() 
+		# # process other events
+		# for event in events:
+		# 	mods = pygame.key.get_mods()
+		# 	if event.type == KEYDOWN:
+		# 		if event.key == K_F10 and mods & pygame.KMOD_RSHIFT and mods & pygame.KMOD_CTRL: #program exit combination
+		# 			quit()
+		mon_video_setup.processEvents()
 				
 	radio.writeAckPayload(1, ackPL1, len(ackPL1)) #send acknowledgement about OnHand operation
 
 	mon_video_setup.videoPlayback(path) #run video from path
+	
+	print "Ready to send message"
+	
+	#TRANSMITTING COMMAND TO "BOMB"
+	radio.stopListening()
+	radio.openWritingPipe(pipes[2])
+
+	while not mon_comm.dataTransmit("timer_start"):
+		# events = pygame.event.get() 
+		# # process other events
+		# for event in events:
+		# 	mods = pygame.key.get_mods()
+		# 	if event.type == KEYDOWN:
+		# 		if event.key == K_F10 and mods & pygame.KMOD_RSHIFT and mods & pygame.KMOD_CTRL: #program exit combination
+		# 			quit()
+		mon_video_setup.processEvents()
 	break
 
-print "Ready to send message"
-#TRANSMITTING COMMAND TO "BOMB"
-radio.stopListening()
-radio.openWritingPipe(pipes[2])
 mon_video_setup.fillScreen((0,0,0))
-while not mon_comm.dataTransmit("timer_start"):
-	pass
