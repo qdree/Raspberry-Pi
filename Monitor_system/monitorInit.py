@@ -6,15 +6,20 @@ from lib_nrf24 import NRF24
 GPIO.setmode(GPIO.BCM)
 radio = NRF24(GPIO, spidev.SpiDev())
 
+def wait(seconds):
+	start_time = time.time()
+	while True:
+		current_time = time.time()
+		#print (float(current_time - start_time))
+		if float(current_time - start_time) >= seconds:
+			break
+
 class VideoSetup:
 	def __init__(self):
 
 		GPIO.setwarnings(False)
 			
-#		self.context = pyudev.Context()
-#		self.monitor = pyudev.Monitor.from_netlink(self.context)
-#		self.monitor.filter_by(subsystem = 'input')
-
+	def __init__(self):
 		self.width = gtk.gdk.screen_width() #get screen width
 		self.height = gtk.gdk.screen_height() #get screen height
 
@@ -78,28 +83,33 @@ class VideoSetup:
 				self.player_active = False
 				break
 
+	def processEvents(self):
+		events = pygame.event.get()
+			
+		# process other events
+		for event in events:
+			mods = pygame.key.get_mods()
+			if event.type == QUIT: return
+			if event.type == KEYDOWN:
+				if event.key == K_F10 and mods & pygame.KMOD_RSHIFT and mods & pygame.KMOD_CTRL:
+					quit()
+
 	def fillScreen(self, color):
 		pygame.init() #initialize pygame
 		screen = pygame.display.set_mode((self.width,self.height), FULLSCREEN) #create the screen
 		screen.fill(color) # fill the screen black
 		while True:
-			events = pygame.event.get()
+			# events = pygame.event.get()
 			
 			# process other events
-			for event in events:
-				mods = pygame.key.get_mods()
-				if event.type == QUIT: return
-				if event.type == KEYDOWN:
-					if event.key == K_F10 and mods & pygame.KMOD_RSHIFT and mods & pygame.KMOD_CTRL:
-						quit()
+			# for event in events:
+			# 	mods = pygame.key.get_mods()
+			# 	if event.type == QUIT: return
+			# 	if event.type == KEYDOWN:
+			# 		if event.key == K_F10 and mods & pygame.KMOD_RSHIFT and mods & pygame.KMOD_CTRL:
+			# 			quit()
+			processEvents()
 
-def wait(seconds):
-	start_time = time.time()
-	while True:
-		current_time = time.time()
-		#print (float(current_time - start_time))
-		if float(current_time - start_time) >= seconds:
-			break
 
 class Communication(VideoSetup):
 
