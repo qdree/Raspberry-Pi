@@ -87,11 +87,12 @@ while True:
 
 	if morS_comm.dataReceive(".*win.*", ackPL1) == "win":
 		morS_video_setup.videoPlayback(name_win) #run video if bomb was disarmed
+		break
 
 	if morS_comm.dataReceive(".*lose.*", ackPL1) == "lose":
 		morS_video_setup.videoPlayback(name_win) #run video if bomd exploded
+		break
 
-	break
 
 morS_video_setup.fillScreen((0,0,0))
 
