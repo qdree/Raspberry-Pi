@@ -15,25 +15,25 @@ GPIO.setup(outArduino_1, GPIO.OUT)
 GPIO.setup(outArduino_2, GPIO.OUT)
 
 
-mon_video_setup = VideoSetup()
-mon_comm = Communication()
+morS_video_setup = VideoSetup()
+morS_comm = Communication()
 
-def distanceMeasurement(dist_limit):
-	while not distance >= dist_limit:
+def distanceMeasurement():
+	#produce impulse 
+	GPIO.output(TRIG, True)
+	wait(0.00001)
+	GPIO.output(TRIG, False)
 
-		#produce impulse 
-		GPIO.output(TRIG, True)
-		wait(0.00001)
-		GPIO.output(TRIG, False)
+	while GPIO.input(ECHO) == 0:
+		pulse_start = time.time()
+	while GPIO.input(ECHO) == 1:
+		pulse_end = time.time()
 
-		while GPIO.input(ECHO) == 0:
-			pulse_start = time.time()
-		while GPIO.input(ECHO) == 1:
-			pulse_end = time.time()
-
-		pulse_duration = pulse_end - pulse_start
-		distance = pulse_duration * 17150
-		distance = round(distance, 2)
+	pulse_duration = pulse_end - pulse_start
+	distance = pulse_duration * 17150
+	distance = round(distance, 2)
+	print ("Distance: {}cm".format(distance))
+	return distance
 
 
 pipes = [[0xAB, 0xCD, 0xAB, 0xCD, 0x71], [0xF0, 0xF0, 0xF0, 0xF0, 0xE1], [0xF0, 0xF0, 0xF0, 0xF0, 0xE2]]
@@ -67,34 +67,44 @@ print "all video files were chosen"
 while True:
 	print "Ready to receive commands from bomb"
 
-	if morS_comm.dataReceive(".*mor_off.*", ackPL1) == "mor_off":
-		break
-	elif morS_comm.dataReceive(".*mor_on.*", ackPL1) == "mor_on":
-		pygame.init() #initialize pygame
-		screen = pygame.display.set_mode((morS_video_setup.width,morS_video_setup.height), FULLSCREEN) #create the screen
-		screen.fill((0,0,0)) # fill the screen black
+	if morS_comm.dataReceive(".*mor_on.*", ackPL1) == "mor_on":
 		print "..."
-		while not distanceMeasurement(1000): #wait til people come close enough to table
-			morS_video_setup.processEvents()
+		#pygame.init() #initialize pygame
+		#screen = pygame.display.set_mode((morS_video_setup.width,morS_video_setup.height), FULLSCREEN) #create the screen
+		#screen.fill((0,0,0)) # fill the screen black
+
+		#while distanceMeasurement() <= float(35): #wait til people come close enough to table
+		#	print "Measuring...."
+			#morS_video_setup.processEvents()
+			#events = pygame.event.get()
+			
+			# process other events
+			#for event in events:
+			#	mods = pygame.key.get_mods()
+			#	if event.type == QUIT: quit()
+			#	if event.type == KEYDOWN:
+			#		if event.key == K_F10 and mods & pygame.KMOD_RSHIFT and mods & pygame.KMOD_CTRL:
+			#			quit() 
 
 		morS_video_setup.videoPlayback(name_start) #run video before game start
 		
-		GPIO.output(arduino_1, True)
-		GPIO.output(arduino_2, True)
+		GPIO.output(outArduino_1, True)
+		GPIO.output(outArduino_2, True)
 
 		if (GPIO.input(inArduino_1) == 0 and GPIO.input(inArduino_2) == 0):
 			morS_video_setup.videoPlayback(name_end) #run video after game	
+	
 
-	if morS_comm.dataReceive(".*win.*", ackPL1) == "win":
-		morS_video_setup.videoPlayback(name_win) #run video if bomb was disarmed
+		if morS_comm.dataReceive(".*win.*", ackPL1) == "win":
+			morS_video_setup.videoPlayback(name_win) #run video if bomb was disarmed
+			break
+
+		if morS_comm.dataReceive(".*lose.*", ackPL1) == "lose":
+			morS_video_setup.videoPlayback(name_win) #run video if bomd exploded
+			break
+
+	
+	if morS_comm.dataReceive(".*mor_off.*", ackPL1) == "mor_off":
 		break
-
-	if morS_comm.dataReceive(".*lose.*", ackPL1) == "lose":
-		morS_video_setup.videoPlayback(name_win) #run video if bomd exploded
-		break
-
 
 morS_video_setup.fillScreen((0,0,0))
-
-		
-
