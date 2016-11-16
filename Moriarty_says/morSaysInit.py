@@ -44,7 +44,7 @@ class VideoSetup:
 		
 	def pathCreation(self, vName):
 		video_lang = str(vName).split('.')[0].lower()
-		pattern = re.compile(r'(.*\.mp4) | (.*\.mpeg) | (.*\.avi) | (.*\.mkv)', flags = re.I | re.X | re.U) #pattern for regex
+		pattern = re.compile(r'(.*\.mp4) | (.*\.mpeg) | (.*\.avi) | (.*\.mkv) | (.*\.divx)', flags = re.I | re.X | re.U) #pattern for regex
 		os.chdir('/media/')
 
 		for dirName, curdirList, fileList in os.walk(os.getcwd()): #iterate through generator of pathes
