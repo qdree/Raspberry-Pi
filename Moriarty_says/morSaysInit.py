@@ -106,6 +106,7 @@ class Communication(VideoSetup):
 	def dataReceive(self, find_that):
 		pattern = re.compile(find_that, flags = re.I | re.X | re.U)
 		string = ""
+		ack = [1]
 		while True:
 			if radio.available(0):
 				recv_message = []
@@ -119,7 +120,7 @@ class Communication(VideoSetup):
 						string += chr(n)
 				print (string)
 				if pattern.match(string):
-					radio.writeAckPayload(1, [1], len(ack)) #send acknowledgement
+					radio.writeAckPayload(1, ack, len(ack)) #send acknowledgement
 					print ("Loaded payload reply of {}".format(ack))
 					return string.lower()
 				else:
