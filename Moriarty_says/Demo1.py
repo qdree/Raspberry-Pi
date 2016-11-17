@@ -53,10 +53,8 @@ radio.startListening()
 radio.printDetails()
 
 #input_name = raw_input("Input name:")
-ackPL = [0]
-ackPL1 = [1]
 
-video_lang = morS_comm.dataReceive("(.*english.*) | (.*german.*)", ackPL)
+video_lang = morS_comm.dataReceive("(.*english.*) | (.*german.*)")
 name_start = morS_video_setup.pathCreation(morS_video_setup.nameCheck(video_lang+"start")) #create address to the video for game start
 name_end = morS_video_setup.pathCreation(morS_video_setup.nameCheck(video_lang+"end")) #create address to the video for game start
 
@@ -65,26 +63,26 @@ name_win = morS_video_setup.pathCreation(morS_video_setup.nameCheck(video_lang+"
 print "all video files were chosen"
 
 while True:
-	print "Ready to receive commands from bomb"
+	game_mode_message = morS_comm.dataReceive("(.*mor_on.*) | (.*mor_off.*)") #message from Quest Control Panel
 
-	if morS_comm.dataReceive(".*mor_on.*", ackPL1) == "mor_on":
+	if game_mode_message == "mor_on":
 		print "..."
-		#pygame.init() #initialize pygame
-		#screen = pygame.display.set_mode((morS_video_setup.width,morS_video_setup.height), FULLSCREEN) #create the screen
-		#screen.fill((0,0,0)) # fill the screen black
+		pygame.init() #initialize pygame
+		screen = pygame.display.set_mode((morS_video_setup.width,morS_video_setup.height), FULLSCREEN) #create the screen
+		screen.fill((0,0,0)) # fill the screen black
 
-		#while distanceMeasurement() <= float(35): #wait til people come close enough to table
-		#	print "Measuring...."
-			#morS_video_setup.processEvents()
-			#events = pygame.event.get()
+		while distanceMeasurement() <= float(35): #wait til people come close enough to table
+			print "Measuring...."
+			morS_video_setup.processEvents()
+			events = pygame.event.get()
 			
-			# process other events
-			#for event in events:
-			#	mods = pygame.key.get_mods()
-			#	if event.type == QUIT: quit()
-			#	if event.type == KEYDOWN:
-			#		if event.key == K_F10 and mods & pygame.KMOD_RSHIFT and mods & pygame.KMOD_CTRL:
-			#			quit() 
+			process other events
+			for event in events:
+				mods = pygame.key.get_mods()
+				if event.type == QUIT: quit()
+				if event.type == KEYDOWN:
+					if event.key == K_F10 and mods & pygame.KMOD_RSHIFT and mods & pygame.KMOD_CTRL:
+						quit() 
 
 		morS_video_setup.videoPlayback(name_start) #run video before game start
 		
@@ -94,17 +92,18 @@ while True:
 		if (GPIO.input(inArduino_1) == 0 and GPIO.input(inArduino_2) == 0):
 			morS_video_setup.videoPlayback(name_end) #run video after game	
 	
+		print "Ready to receive commands from bomb"
+	
+		bomb_state_massage = morS_comm.dataReceive("(.*win.*) | (.*lose.*) ") #message from Bomb
 
-		if morS_comm.dataReceive(".*win.*", ackPL1) == "win":
+		if bomb_state_massage == "win":
 			morS_video_setup.videoPlayback(name_win) #run video if bomb was disarmed
 			break
-
-		if morS_comm.dataReceive(".*lose.*", ackPL1) == "lose":
+		elif bomb_state_massage == "lose":
 			morS_video_setup.videoPlayback(name_win) #run video if bomd exploded
 			break
 
-	
-	if morS_comm.dataReceive(".*mor_off.*", ackPL1) == "mor_off":
+	elif game_mode_message == "mor_off":
 		break
 
 morS_video_setup.fillScreen((0,0,0))
