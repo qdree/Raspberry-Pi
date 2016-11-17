@@ -79,7 +79,7 @@ while True:
 			morS_video_setup.processEvents()
 			events = pygame.event.get()
 			
-			process other events
+			#process other events
 			for event in events:
 				mods = pygame.key.get_mods()
 				if event.type == QUIT: quit()
