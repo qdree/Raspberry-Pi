@@ -73,7 +73,7 @@ while True:
 #		screen = pygame.display.set_mode((morS_video_setup.width,morS_video_setup.height), FULLSCREEN) #create the screen
 #		screen.fill((0,0,0)) # fill the screen black
 
-		while distanceMeasurement() <= float(35): #wait til people come close enough to table
+		while distanceMeasurement() >= float(35): #wait til people come close enough to table
 			print "Measuring...."
 #			morS_video_setup.processEvents()
 #			events = pygame.event.get()
@@ -92,6 +92,7 @@ while True:
 #				if event.type == KEYDOWN:
 #					if event.key == K_F10 and mods & pygame.KMOD_RSHIFT and mods & pygame.KMOD_CTRL:
 #						quit() 
+		print "LET'S GAME BEGINS!!!!"
 
 		morS_video_setup.videoPlayback(name_start) #run video before game start
 		
