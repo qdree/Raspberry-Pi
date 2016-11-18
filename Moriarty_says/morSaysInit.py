@@ -6,6 +6,14 @@ from lib_nrf24 import NRF24
 GPIO.setmode(GPIO.BCM)
 radio = NRF24(GPIO, spidev.SpiDev())
 
+def wait(seconds):
+	start_time = time.time()
+	while True:
+		current_time = time.time()
+		#print (float(current_time - start_time))
+		if float(current_time - start_time) >= seconds:
+			break
+
 class VideoSetup:
 	def __init__(self):
 
@@ -64,16 +72,18 @@ class VideoSetup:
 
 	def videoPlayback(self, movie):
 		
-		start_time = time.time()
+		#start_time = time.time()
 		while True:
 			if not self.player_active:
 				omxc = os.popen("omxplayer -b %s" %movie)
 				print ("\nplayer started")
 				self.player_active = True
+				wait(1)
 				
-			current_time = time.time()
-			if (float(current_time - start_time) >= 1 and self.player_active and os.system("pidof omxplayer.bin") == 256): #check if player opened and process finished
-				print current_time - start_time
+		#	current_time = time.time()
+#			if (float(current_time - start_time) >= 1 and self.player_active and os.system("pidof omxplayer.bin") == 256): #check if player opened and process finished
+			if (self.player_active and os.system("pidof omxplayer.bin") == 256): #check if player opened and process finished
+				#print current_time - start_time
 				print ("\nplayer is inactive")
 				self.player_active = False
 				break
@@ -93,13 +103,7 @@ class VideoSetup:
 					if event.key == K_F10 and mods & pygame.KMOD_RSHIFT and mods & pygame.KMOD_CTRL:
 						quit()
 
-def wait(seconds):
-	start_time = time.time()
-	while True:
-		current_time = time.time()
-		#print (float(current_time - start_time))
-		if float(current_time - start_time) >= seconds:
-			break
+
 
 class Communication(VideoSetup):
 
