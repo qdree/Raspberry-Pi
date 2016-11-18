@@ -69,51 +69,47 @@ while True:
 
 	if game_mode_message == "mor_on":
 		print "..."
-#		pygame.init() #initialize pygame
-#		screen = pygame.display.set_mode((morS_video_setup.width,morS_video_setup.height), FULLSCREEN) #create the screen
-#		screen.fill((0,0,0)) # fill the screen black
+		pygame.init() #initialize pygame
+		screen = pygame.display.set_mode((morS_video_setup.width,morS_video_setup.height), FULLSCREEN) #create the screen
+		screen.fill((0,0,0)) # fill the screen black
 
-		while distanceMeasurement() >= float(35): #wait til people come close enough to table
+		while distanceMeasurement() >= float(5): #wait til people come close enough to table
 			print "Measuring...."
-#			morS_video_setup.processEvents()
-#			events = pygame.event.get()
+			events = pygame.event.get()
 			
-#			#process other events
-#			for event in events:
-#				mods = pygame.key.get_mods()
-#				if event.type == QUIT: quit()
-#				if event.type == KEYDOWN:
-#					if event.key == K_F10 and mods & pygame.KMOD_RSHIFT and mods & pygame.KMOD_CTRL:
-#						quit() 
 			#process other events
-#			for event in events:
-#				mods = pygame.key.get_mods()
-#				if event.type == QUIT: quit()
-#				if event.type == KEYDOWN:
-#					if event.key == K_F10 and mods & pygame.KMOD_RSHIFT and mods & pygame.KMOD_CTRL:
-#						quit() 
-		print "LET'S GAME BEGINS!!!!"
+			for event in events:
+				mods = pygame.key.get_mods()
+				if event.type == QUIT: quit()
+				if event.type == KEYDOWN:
+					if event.key == K_F10 and mods & pygame.KMOD_RSHIFT and mods & pygame.KMOD_CTRL:
+						quit() 
+ 
+		print "\nLET'S GAME BEGINS!!!!"
 
 		morS_video_setup.videoPlayback(name_start) #run video before game start
-		
+				
 		GPIO.output(outArduino_1, True)
 		GPIO.output(outArduino_2, True)
 
+		print "\nYOU WON THE GAME!!!!"
 		if (GPIO.input(inArduino_1) == 0 and GPIO.input(inArduino_2) == 0):
 			morS_video_setup.videoPlayback(name_end) #run video after game	
-	
-		print "Ready to receive commands from bomb"
+		print "\nReady to receive commands from bomb"
 	
 		bomb_state_massage = morS_comm.dataReceive("(.*win.*) | (.*lose.*) ") #message from Bomb
 
 		if bomb_state_massage == "win":
 			morS_video_setup.videoPlayback(name_win) #run video if bomb was disarmed
+			print "\nBOMB DISARMED!!!! CONGRATULATIONS"
 			break
 		elif bomb_state_massage == "lose":
 			morS_video_setup.videoPlayback(name_win) #run video if bomd exploded
+			print "\nBOMB EXPLODED!!!!"
 			break
 
 	elif game_mode_message == "mor_off":
 		break
 
+print "FINISH"
 morS_video_setup.fillScreen((0,0,0))
