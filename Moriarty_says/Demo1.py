@@ -86,12 +86,12 @@ while True:
 #					if event.key == K_F10 and mods & pygame.KMOD_RSHIFT and mods & pygame.KMOD_CTRL:
 #						quit() 
 			#process other events
-			for event in events:
-				mods = pygame.key.get_mods()
-				if event.type == QUIT: quit()
-				if event.type == KEYDOWN:
-					if event.key == K_F10 and mods & pygame.KMOD_RSHIFT and mods & pygame.KMOD_CTRL:
-						quit() 
+#			for event in events:
+#				mods = pygame.key.get_mods()
+#				if event.type == QUIT: quit()
+#				if event.type == KEYDOWN:
+#					if event.key == K_F10 and mods & pygame.KMOD_RSHIFT and mods & pygame.KMOD_CTRL:
+#						quit() 
 
 		morS_video_setup.videoPlayback(name_start) #run video before game start
 		
