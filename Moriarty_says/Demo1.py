@@ -55,11 +55,14 @@ radio.printDetails()
 #input_name = raw_input("Input name:")
 
 video_lang = morS_comm.dataReceive("(.*english.*) | (.*german.*)")
-name_start = morS_video_setup.pathCreation(morS_video_setup.nameCheck(video_lang+"start")) #create address to the video for game start
-name_end = morS_video_setup.pathCreation(morS_video_setup.nameCheck(video_lang+"end")) #create address to the video for game start
+video_name = morS_video_setup.pathCreation(morS_video_setup.nameCheck(video_lang))
 
-name_lose = morS_video_setup.pathCreation(morS_video_setup.nameCheck(video_lang+"lose")) #create address to the video for lose
-name_win = morS_video_setup.pathCreation(morS_video_setup.nameCheck(video_lang+"win")) #create address to the video for win
+name_start = (video_name + "start") #create address to the video for game start
+name_end = (video_name + "end") #create address to the video for game start
+
+name_lose = (video_name + "lose") #create address to the video for lose
+name_win = (video_name + "win") #create address to the video for win
+
 print "all video files were chosen"
 
 while True:
@@ -76,6 +79,7 @@ while True:
 #			morS_video_setup.processEvents()
 #			events = pygame.event.get()
 			
+<<<<<<< HEAD
 #			#process other events
 #			for event in events:
 #				mods = pygame.key.get_mods()
@@ -83,6 +87,15 @@ while True:
 #				if event.type == KEYDOWN:
 #					if event.key == K_F10 and mods & pygame.KMOD_RSHIFT and mods & pygame.KMOD_CTRL:
 #						quit() 
+=======
+			#process other events
+			for event in events:
+				mods = pygame.key.get_mods()
+				if event.type == QUIT: quit()
+				if event.type == KEYDOWN:
+					if event.key == K_F10 and mods & pygame.KMOD_RSHIFT and mods & pygame.KMOD_CTRL:
+						quit() 
+>>>>>>> 227540a46b169f29c7fc00ec660b32a25fe4635e
 
 		morS_video_setup.videoPlayback(name_start) #run video before game start
 		
