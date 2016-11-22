@@ -24,7 +24,19 @@ ackPL = [0]
 ackPL1 = [1]
 
 video_name = mon_comm.dataReceive("(.*english.*) | (.*german.*)", ackPL)
-path = mon_video_setup.pathCreation(mon_video_setup.nameCheck(video_name)) #create address to the video
+
+path = ''
+
+while True:
+	if path == None:
+		path = mon_video_setup.pathCreation(mon_video_setup.nameCheck(video_name)) #create address to the video
+	elif len(path) <= 1:
+		path = mon_video_setup.pathCreation(mon_video_setup.nameCheck(video_name)) #create address to the video
+	else:
+		break
+
+print path, type(path)
+
 print "video name chosen"
 
 
@@ -32,9 +44,12 @@ print "video name chosen"
 while True:
 	print "Ready to receive commands from bracelet"
 	pygame.init() #initialize pygame
-	screen = pygame.display.set_mode((mon_video_setup.width,mon_video_setup.height), FULLSCREEN) #create the screen
+	screen = pygame.display.set_mode((mon_video_setup.WIDTH ,mon_video_setup.HEIGHT), FULLSCREEN) #create the screen
+	pygame.mouse.set_visible(False)
 	screen.fill((0,0,0)) # fill the screen black
+	
 	print "..."
+	
 	while not mon_comm.dataReceive(".*OnHand.*", ackPL1) == "onhand": #wait correct message
 		# events = pygame.event.get() 
 		# # process other events
