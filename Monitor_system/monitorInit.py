@@ -15,14 +15,15 @@ def wait(seconds):
 			break
 
 class VideoSetup:
-	def __init__(self):
-
-		GPIO.setwarnings(False)
 			
 	def __init__(self):
-		self.width = gtk.gdk.screen_width() #get screen width
-		self.height = gtk.gdk.screen_height() #get screen height
-
+		#self.width = gtk.gdk.screen_width() #get screen width
+		#self.height = gtk.gdk.screen_height() #get screen height
+		
+		self.HEIGHT = 600
+		self.WIDTH = 800
+		
+		
 		self.player_active = False #player activity flag
 
 	def nameCheck(self, fName):
@@ -96,19 +97,20 @@ class VideoSetup:
 
 	def fillScreen(self, color):
 		pygame.init() #initialize pygame
-		screen = pygame.display.set_mode((self.width,self.height), FULLSCREEN) #create the screen
+		screen = pygame.display.set_mode((self.WIDTH, self.HEIGHT), FULLSCREEN) #create the screen
+		pygame.mouse.set_visible(False)
 		screen.fill(color) # fill the screen black
 		while True:
-			# events = pygame.event.get()
+#			events = pygame.event.get()
 			
-			# process other events
-			# for event in events:
-			# 	mods = pygame.key.get_mods()
-			# 	if event.type == QUIT: return
-			# 	if event.type == KEYDOWN:
-			# 		if event.key == K_F10 and mods & pygame.KMOD_RSHIFT and mods & pygame.KMOD_CTRL:
-			# 			quit()
-			processEvents()
+			#process other events
+#			for event in events:
+#				mods = pygame.key.get_mods()
+#				if event.type == QUIT: return
+#			 	if event.type == KEYDOWN:
+#					if event.key == K_F10 and mods & pygame.KMOD_RSHIFT and mods & pygame.KMOD_CTRL:
+#						quit()
+			self.processEvents()
 
 
 class Communication(VideoSetup):
