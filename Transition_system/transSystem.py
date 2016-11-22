@@ -1,5 +1,7 @@
 from  transitionInit import *
 
+wait(1)
+
 tr_sys = Transition()
 
 pipes = [[0xAB, 0xCD, 0xAB, 0xCD, 0x71], [0xF0, 0xF0, 0xF0, 0xF0, 0xE1]]
@@ -42,14 +44,24 @@ def dataReceive(find_that, ack):
 					string += chr(n)
 			print (string)
 			if pattern.match(string):
-				radio.writeAckPayload(1, ack, len(ack)) #send acknowledgement
+				radio.writeAckPayload(1, ack, len(ack)) #send acknowledgementnht
 				print ("Loaded payload reply of {}".format(ack))
 				return string
 			else:
 				string = ''
 	
-video_name = dataReceive("(.*english.*) | (.*german.*)", ackPL)
-path = tr_sys.pathCreation(tr_sys.nameCheck(video_name)) #create address to the video
+video_name = tr_sys.nameCheck(dataReceive("(.*english.*) | (.*german.*)", ackPL))
+path = ''
+
+while True:
+	if path == None:
+		path = tr_sys.pathCreation(video_name) #create address to the video
+	elif len(path) <= 1:
+		path = tr_sys.pathCreation(video_name) #create address to the video
+	else:
+		break
+
+print path, type(path)
 
 print "video name chosen"
 
@@ -61,7 +73,8 @@ while True:
 	elif mode_message == "open_door":
 		radio.writeAckPayload(1, ackPL2, len(ackPL2)) #send acknowledgement about open_door operation
 		pygame.init() #initialize pygame
-		screen = pygame.display.set_mode((tr_sys.width,tr_sys.height), FULLSCREEN) #create the screen
+		#screen = pygame.display.set_mode((tr_sys.width,tr_sys.height), FULLSCREEN) #create the screen
+		screen = pygame.display.set_mode((WIDTH, HEIGHT), FULLSCREEN) #create the screen
 		screen.fill((0,0,0)) # fill the screen black
 		while not tr_sys.kbdIden(): #wait for keyboard
 			events = pygame.event.get() 
@@ -81,6 +94,7 @@ while True:
 		break
 	else:
 		print "Unknown command"
+		tr_sys.fillScreen((0,0,0))
 
 print "Door is opened"
 tr_sys.fillScreen((0,0,0))
