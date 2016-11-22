@@ -3,7 +3,7 @@ import evdev
 import functools
 import re
 import os
-import gtk.gdk
+#import gtk.gdk
 from pygame.locals import *
 import pygame, sys, eztext
 import RPi.GPIO as GPIO
@@ -14,6 +14,16 @@ import spidev
 #radio = NRF24(GPIO, spidev.SpiDev())
 GPIO.setmode(GPIO.BCM)
 radio = NRF24(GPIO, spidev.SpiDev())
+HEIGHT = 800
+WIDTH = 600
+
+def wait(seconds):
+	start_time = time.time()
+	while True:
+		current_time = time.time()
+		#print (float(current_time - start_time))
+		if float(current_time - start_time) >= seconds:
+			break
 
 class Transition:
 	def __init__(self):
@@ -26,8 +36,8 @@ class Transition:
 		self.monitor = pyudev.Monitor.from_netlink(self.context)
 		self.monitor.filter_by(subsystem = 'input')
 
-		self.width = gtk.gdk.screen_width() #get screen width
-		self.height = gtk.gdk.screen_height() #get screen height
+		#self.width = gtk.gdk.screen_width() #get screen width
+		#self.height = gtk.gdk.screen_height() #get screen height
 
 		self.player_active = False #player activity flag
 
@@ -82,7 +92,7 @@ class Transition:
 				self.player_active = True
 				
 			current_time = time.time()
-			if (float(current_time - start_time) >= 1 and self.player_active and os.system("pidof omxplayer.bin") == 256): #check if player opened and process finished
+			if (float(current_time - start_time) >= 1.5 and self.player_active and os.system("pidof omxplayer.bin") == 256): #check if player opened and process finished
 				print current_time - start_time
 				print ("\nplayer is inactive")
 				self.player_active = False
@@ -113,15 +123,16 @@ class Transition:
 	def passChk(self, password):
 	   
 		pygame.init() #initialize pygame
-		screen = pygame.display.set_mode((self.width,self.height), FULLSCREEN) #create the screen
+		#screen = pygame.display.set_mode((self.width,self.height), FULLSCREEN) #create the screen
+		screen = pygame.display.set_mode((WIDTH, HEIGHT), FULLSCREEN) #create the screen
 		screen.fill((255,255,255)) # fill the screen black
 
-		text = eztext.Input(maxlength=40, color=(255,255,255), prompt='PASSWORD:')
+		text = eztext.Input(maxlength=20, color=(255,255,255), prompt='PASSWORD:', font = pygame.font.Font(None, 62))
 		clock = pygame.time.Clock() #create the pygame clock
 
 		while True:
 			clock.tick(15) # make sure the program is running at 15 fps
-			text.set_pos(self.width/2.0,self.height/2.0)
+			text.set_pos(WIDTH/2.0, HEIGHT/2.0)
 
 			# events for text
 			events = pygame.event.get()
@@ -149,7 +160,7 @@ class Transition:
 			
 	def fillScreen(self, color):
 		pygame.init() #initialize pygame
-		screen = pygame.display.set_mode((self.width,self.height), FULLSCREEN) #create the screen
+		screen = pygame.display.set_mode((WIDTH, HEIGHT), FULLSCREEN) #create the screen
 		screen.fill(color) # fill the screen black
 		while True:
 			events = pygame.event.get()
