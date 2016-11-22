@@ -54,9 +54,11 @@ path = tr_sys.pathCreation(tr_sys.nameCheck(video_name)) #create address to the 
 print "video name chosen"
 
 while True:
-	if dataReceive(".*by_pass.*", ackPL1) == "by_pass":
+	mode_message = dataReceive("(.*by_pass.*) | .*open_door.*", ackPL1)
+
+	if mode_message == "by_pass":
 		break
-	elif dataReceive(".*open_door.*", ackPL1) == "open_door":
+	elif mode_message == "open_door":
 		radio.writeAckPayload(1, ackPL2, len(ackPL2)) #send acknowledgement about open_door operation
 		pygame.init() #initialize pygame
 		screen = pygame.display.set_mode((tr_sys.width,tr_sys.height), FULLSCREEN) #create the screen
