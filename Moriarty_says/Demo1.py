@@ -54,7 +54,7 @@ radio.printDetails()
 
 #input_name = raw_input("Input name:")
 
-video_lang = morS_comm.dataReceive("(.*english.*) | (.*german.*)")
+video_lang = morS_video_setup.nameCheck(morS_comm.dataReceive("(.*english.*) | (.*german.*)"))
 
 name_start = ''
 name_end = ''
@@ -71,12 +71,20 @@ def nameSet(language):
 
 
 while True:
-	if (name_start == None or name_end == None or name_win == None or name_lose == None):
-		nameSet(video_lang)	
-	elif (len(name_start) <= 1 or len(name_end) <= 1 or len(name_win) <= 1 or len(name_lose) <= 1):
-		nameSet(video_lang)
+	if (name_start == None or len(name_start) <= 1):
+		name_start = morS_video_setup.pathCreation(video_lang + "start") #create address to the video for game start
 	else:
-		break
+		if (name_end == None or len(name_end) <= 1):
+			name_end = morS_video_setup.pathCreation(video_lang + "end") #create address to the video for game start
+		else:
+			if (name_win == None or len(name_win) <= 1):
+				name_win = morS_video_setup.pathCreation(video_lang + "win") #create address to the video for game start
+			else:
+				if (name_lose == None or len(name_lose) <= 1):
+					name_lose = morS_video_setup.pathCreation(video_lang + "lose") #create address to the video for game start
+				else:
+					break
+			
 
 print "all video files were chosen"
 

@@ -19,12 +19,6 @@ class VideoSetup:
 
 		GPIO.setwarnings(False)
 			
-#		self.context = pyudev.Context()
-#		self.monitor = pyudev.Monitor.from_netlink(self.context)
-#		self.monitor.filter_by(subsystem = 'input')
-
-#		self.width = gtk.gdk.screen_width() #get screen width
-#		self.height = gtk.gdk.screen_height() #get screen height
 		
 		self.WIDTH = 800
 		self.HEIGHT = 600
@@ -90,23 +84,26 @@ class VideoSetup:
 				print ("\nplayer is inactive")
 				self.player_active = False
 				break
-
+	
+	def processEvents(self):
+		events = pygame.event.get()
+		
+		# process other events
+		for event in events:
+			mods = pygame.key.get_mods()
+			if event.type == QUIT: return
+			if event.type == KEYDOWN:
+				if event.key == K_F10 and mods & pygame.KMOD_RSHIFT and mods & pygame.KMOD_CTRL:
+					quit()
+					
+	
 	def fillScreen(self, color):
 		pygame.init() #initialize pygame
 		screen = pygame.display.set_mode((self.WIDTH,self.HEIGHT), FULLSCREEN) #create the screen
 		pygame.mouse.set_visible(False)
 		screen.fill(color) # fill the screen black
 		while True:
-			events = pygame.event.get()
-			
-			# process other events
-			for event in events:
-				mods = pygame.key.get_mods()
-				if event.type == QUIT: return
-				if event.type == KEYDOWN:
-					if event.key == K_F10 and mods & pygame.KMOD_RSHIFT and mods & pygame.KMOD_CTRL:
-						quit()
-
+			self.processEvents()
 
 
 class Communication(VideoSetup):
