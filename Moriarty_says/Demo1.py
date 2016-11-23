@@ -75,13 +75,13 @@ while True:
 		name_start = morS_video_setup.pathCreation(video_lang + "start") #create address to the video for game start
 	else:
 		if (name_end == None or len(name_end) <= 1):
-			name_end = morS_video_setup.pathCreation(video_lang + "end") #create address to the video for game start
+			name_end = morS_video_setup.pathCreation(video_lang + "end") #create address to the video for game end
 		else:
 			if (name_win == None or len(name_win) <= 1):
-				name_win = morS_video_setup.pathCreation(video_lang + "win") #create address to the video for game start
+				name_win = morS_video_setup.pathCreation(video_lang + "win") #create address to the video for bomb disarming 
 			else:
 				if (name_lose == None or len(name_lose) <= 1):
-					name_lose = morS_video_setup.pathCreation(video_lang + "lose") #create address to the video for game start
+					name_lose = morS_video_setup.pathCreation(video_lang + "lose") #create address to the video for bomb explosion
 				else:
 					break
 			
