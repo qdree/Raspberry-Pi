@@ -29,7 +29,10 @@ class Transition:
 	def __init__(self):
 		
 		GPIO.setup(18, GPIO.OUT) #LED pin
+		GPIO.setup(27, GPIO.OUT) #Relay pin
 		GPIO.output(18, GPIO.LOW) #turn off LED
+		GPIO.output(27, GPIO.LOW) #set relay in open state
+
 		GPIO.setwarnings(False)
 				
 		self.context = pyudev.Context()
@@ -127,7 +130,7 @@ class Transition:
 		screen = pygame.display.set_mode((WIDTH, HEIGHT), FULLSCREEN) #create the screen
 		pygame.mouse.set_visible(False)
 
-		screen.fill((255,255,255)) # fill the screen black
+		screen.fill((0,0,0)) # fill the screen black
 
 		text = eztext.Input(maxlength=20, color=(255,255,255), prompt='PASSWORD:', font = pygame.font.Font(None, 62))
 		clock = pygame.time.Clock() #create the pygame clock
@@ -159,19 +162,32 @@ class Transition:
 
 			text.draw(screen) #blit text on screen
 			pygame.display.flip() #refresh display
-			
+	
+	def processEvents(self):
+		events = pygame.event.get()
+		
+		# process other events
+		for event in events:
+			mods = pygame.key.get_mods()
+			if event.type == QUIT: return
+			if event.type == KEYDOWN:
+				if event.key == K_F10 and mods & pygame.KMOD_RSHIFT and mods & pygame.KMOD_CTRL:
+					quit()
+					
 	def fillScreen(self, color):
 		pygame.init() #initialize pygame
 		screen = pygame.display.set_mode((WIDTH, HEIGHT), FULLSCREEN) #create the screen
 		pygame.mouse.set_visible(False)
 		screen.fill(color) # fill the screen black
 		while True:
-			events = pygame.event.get()
+			#pass
+			self.processEvents()
+#			events = pygame.event.get()
 			
 			# process other events
-			for event in events:
-				mods = pygame.key.get_mods()
-				if event.type == QUIT: return
-				if event.type == KEYDOWN:
-					if event.key == K_F10 and mods & pygame.KMOD_RSHIFT and mods & pygame.KMOD_CTRL:
-						quit()
+#			for event in events:
+#				mods = pygame.key.get_mods()
+#				if event.type == QUIT: return
+#				if event.type == KEYDOWN:
+#					if event.key == K_F10 and mods & pygame.KMOD_RSHIFT and mods & pygame.KMOD_CTRL:
+#						quit()

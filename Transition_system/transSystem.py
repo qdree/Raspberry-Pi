@@ -2,6 +2,7 @@ from  transitionInit import *
 
 wait(1)
 
+
 tr_sys = Transition()
 
 pipes = [[0xAB, 0xCD, 0xAB, 0xCD, 0x71], [0xF0, 0xF0, 0xF0, 0xF0, 0xE1]]
@@ -62,40 +63,50 @@ while True:
 		break
 
 print path, type(path)
-
 print "video name chosen"
 
-while True:
-	mode_message = dataReceive("(.*by_pass.*) | .*open_door.*", ackPL1)
-
-	if mode_message == "by_pass":
-		break
-	elif mode_message == "open_door":
-		radio.writeAckPayload(1, ackPL2, len(ackPL2)) #send acknowledgement about open_door operation
+def main_cycle():
+	while True:
 		pygame.init() #initialize pygame
-		#screen = pygame.display.set_mode((tr_sys.width,tr_sys.height), FULLSCREEN) #create the screen
 		screen = pygame.display.set_mode((WIDTH, HEIGHT), FULLSCREEN) #create the screen
 		pygame.mouse.set_visible(False)
 		screen.fill((0,0,0)) # fill the screen black
-		while not tr_sys.kbdIden(): #wait for keyboard
-			events = pygame.event.get() 
-			# process other events
-			for event in events:
-				mods = pygame.key.get_mods()
-				if event.type == KEYDOWN:
-					if event.key == K_F10 and mods & pygame.KMOD_RSHIFT and mods & pygame.KMOD_CTRL: #program exit combination
-						quit()
+		print "MESSAGES"	
+		mode_message = dataReceive(".*", ackPL1)
+
+		while True:
+			tr_sys.processEvents()
+			print "\nWhat mode ?"
+
+			if mode_message == "open_door":
+				print "!!!", mode_message, "!!!"
+				
+				print "\nKeyboard???"
+				while not tr_sys.kbdIden(): #wait for keyboard
+					if dataReceive(".*", ackPL1) == "by_pass":
+						print "EXIT WHILE KEYBOARD AWAITING"
+						return
+					else: 
+						pass
+					tr_sys.processEvents()
 					
-		print "Keyboard added"
+				print "Keyboard added"
+				GPIO.output(18, GPIO.HIGH) #turn on LED
 
-		while not tr_sys.passChk(password): #wait for correct password
-			pass
+				tr_sys.passChk(password)
 
-		tr_sys.videoPlayback(path) #run video from path
-		break
-	else:
-		print "Unknown command"
-		tr_sys.fillScreen((0,0,0))
+				tr_sys.videoPlayback(path) #run video from path
 
+				return
+					
+			elif mode_message == "by_pass":
+				return
+				print "RECEIVED MESSAGE TO EXIT"
+		print "BLACK SCREEEEEEEEN"
+
+
+main_cycle()
 print "Door is opened"
+GPIO.output(27, GPIO.HIGH) #short the relay
+
 tr_sys.fillScreen((0,0,0))
