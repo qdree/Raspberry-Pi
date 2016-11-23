@@ -56,11 +56,27 @@ radio.printDetails()
 
 video_lang = morS_comm.dataReceive("(.*english.*) | (.*german.*)")
 
-name_start = morS_video_setup.pathCreation(morS_video_setup.nameCheck(video_lang+ "start")) #create address to the video for game start
-name_end = morS_video_setup.pathCreation(morS_video_setup.nameCheck(video_lang+ "end")) #create address to the video for game start
+name_start = ''
+name_end = ''
 
-name_lose = morS_video_setup.pathCreation(morS_video_setup.nameCheck(video_lang + "lose")) #create address to the video for lose
-name_win = morS_video_setup.pathCreation(morS_video_setup.nameCheck(video_lang + "win")) #create address to the video for win
+name_lose = ''
+name_win = ''
+
+def nameSet(language):
+	name_start = morS_video_setup.pathCreation(morS_video_setup.nameCheck(language + "start")) #create address to the video for game start
+	name_end = morS_video_setup.pathCreation(morS_video_setup.nameCheck(language + "end")) #create address to the video for game start
+
+	name_lose = morS_video_setup.pathCreation(morS_video_setup.nameCheck(language + "lose")) #create address to the video for lose
+	name_win = morS_video_setup.pathCreation(morS_video_setup.nameCheck(language + "win")) #create address to the video for win
+
+
+while True:
+	if (name_start == None or name_end == None or name_win == None or name_lose == None):
+		nameSet(video_lang)	
+	elif (len(name_start) <= 1 or len(name_end) <= 1 or len(name_win) <= 1 or len(name_lose) <= 1):
+		nameSet(video_lang)
+	else:
+		break
 
 print "all video files were chosen"
 
@@ -70,7 +86,8 @@ while True:
 	if game_mode_message == "mor_on":
 		print "..."
 		pygame.init() #initialize pygame
-		screen = pygame.display.set_mode((morS_video_setup.width,morS_video_setup.height), FULLSCREEN) #create the screen
+		screen = pygame.display.set_mode((morS_video_setup.WIDTH,morS_video_setup.HEIGHT), FULLSCREEN) #create the screen
+		pygame.mouse.set_visible(False)
 		screen.fill((0,0,0)) # fill the screen black
 
 		while distanceMeasurement() >= float(5): #wait til people come close enough to table

@@ -23,8 +23,11 @@ class VideoSetup:
 #		self.monitor = pyudev.Monitor.from_netlink(self.context)
 #		self.monitor.filter_by(subsystem = 'input')
 
-		self.width = gtk.gdk.screen_width() #get screen width
-		self.height = gtk.gdk.screen_height() #get screen height
+#		self.width = gtk.gdk.screen_width() #get screen width
+#		self.height = gtk.gdk.screen_height() #get screen height
+		
+		self.WIDTH = 800
+		self.HEIGHT = 600
 
 		self.player_active = False #player activity flag
 
@@ -90,7 +93,8 @@ class VideoSetup:
 
 	def fillScreen(self, color):
 		pygame.init() #initialize pygame
-		screen = pygame.display.set_mode((self.width,self.height), FULLSCREEN) #create the screen
+		screen = pygame.display.set_mode((self.WIDTH,self.HEIGHT), FULLSCREEN) #create the screen
+		pygame.mouse.set_visible(False)
 		screen.fill(color) # fill the screen black
 		while True:
 			events = pygame.event.get()

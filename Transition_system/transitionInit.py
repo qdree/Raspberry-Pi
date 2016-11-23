@@ -125,6 +125,8 @@ class Transition:
 		pygame.init() #initialize pygame
 		#screen = pygame.display.set_mode((self.width,self.height), FULLSCREEN) #create the screen
 		screen = pygame.display.set_mode((WIDTH, HEIGHT), FULLSCREEN) #create the screen
+		pygame.mouse.set_visible(False)
+
 		screen.fill((255,255,255)) # fill the screen black
 
 		text = eztext.Input(maxlength=20, color=(255,255,255), prompt='PASSWORD:', font = pygame.font.Font(None, 62))
@@ -161,6 +163,7 @@ class Transition:
 	def fillScreen(self, color):
 		pygame.init() #initialize pygame
 		screen = pygame.display.set_mode((WIDTH, HEIGHT), FULLSCREEN) #create the screen
+		pygame.mouse.set_visible(False)
 		screen.fill(color) # fill the screen black
 		while True:
 			events = pygame.event.get()

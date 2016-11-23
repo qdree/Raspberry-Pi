@@ -75,6 +75,7 @@ while True:
 		pygame.init() #initialize pygame
 		#screen = pygame.display.set_mode((tr_sys.width,tr_sys.height), FULLSCREEN) #create the screen
 		screen = pygame.display.set_mode((WIDTH, HEIGHT), FULLSCREEN) #create the screen
+		pygame.mouse.set_visible(False)
 		screen.fill((0,0,0)) # fill the screen black
 		while not tr_sys.kbdIden(): #wait for keyboard
 			events = pygame.event.get() 
