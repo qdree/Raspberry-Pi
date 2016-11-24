@@ -29,9 +29,9 @@ path = ''
 
 while True:
 	if path == None:
-		path = mon_video_setup.pathCreation(mon_video_setup.nameCheck(video_name)) #create address to the video
+		path = mon_video_setup.pathCreation(video_name) #create address to the video
 	elif len(path) <= 1:
-		path = mon_video_setup.pathCreation(mon_video_setup.nameCheck(video_name)) #create address to the video
+		path = mon_video_setup.pathCreation(video_name) #create address to the video
 	else:
 		break
 

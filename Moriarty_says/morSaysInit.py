@@ -18,6 +18,8 @@ class VideoSetup:
 	def __init__(self):
 
 		GPIO.setwarnings(False)
+		GPIO.setup(27, GPIO.OUT) #Relay pin
+		GPIO.output(27, GPIO.LOW) #set relay in open state
 			
 		
 		self.WIDTH = 800

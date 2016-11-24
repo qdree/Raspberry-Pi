@@ -51,7 +51,7 @@ def dataReceive(find_that, ack):
 			else:
 				string = ''
 	
-video_name = tr_sys.nameCheck(dataReceive("(.*english.*) | (.*german.*)", ackPL))
+video_name = dataReceive("(.*english.*) | (.*german.*)", ackPL)
 path = ''
 
 while True:

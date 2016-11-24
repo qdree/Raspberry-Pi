@@ -54,7 +54,7 @@ radio.printDetails()
 
 #input_name = raw_input("Input name:")
 
-video_lang = morS_video_setup.nameCheck(morS_comm.dataReceive("(.*english.*) | (.*german.*)"))
+video_lang = morS_comm.dataReceive("(.*english.*) | (.*german.*)")
 
 name_start = ''
 name_end = ''
@@ -62,79 +62,81 @@ name_end = ''
 name_lose = ''
 name_win = ''
 
-def nameSet(language):
-	name_start = morS_video_setup.pathCreation(morS_video_setup.nameCheck(language + "start")) #create address to the video for game start
-	name_end = morS_video_setup.pathCreation(morS_video_setup.nameCheck(language + "end")) #create address to the video for game start
-
-	name_lose = morS_video_setup.pathCreation(morS_video_setup.nameCheck(language + "lose")) #create address to the video for lose
-	name_win = morS_video_setup.pathCreation(morS_video_setup.nameCheck(language + "win")) #create address to the video for win
-
-
 while True:
 	if (name_start == None or len(name_start) <= 1):
 		name_start = morS_video_setup.pathCreation(video_lang + "start") #create address to the video for game start
 	else:
 		if (name_end == None or len(name_end) <= 1):
-			name_end = morS_video_setup.pathCreation(video_lang + "end") #create address to the video for game end
+			name_end = morS_video_setup.pathCreation(str(video_lang) + "end") #create address to the video for game start
 		else:
 			if (name_win == None or len(name_win) <= 1):
-				name_win = morS_video_setup.pathCreation(video_lang + "win") #create address to the video for bomb disarming 
+				name_win = morS_video_setup.pathCreation(str(video_lang) + "win") #create address to the video for game start
 			else:
 				if (name_lose == None or len(name_lose) <= 1):
-					name_lose = morS_video_setup.pathCreation(video_lang + "lose") #create address to the video for bomb explosion
+					name_lose = morS_video_setup.pathCreation(str(video_lang) + "lose") #create address to the video for game start
 				else:
 					break
-			
 
 print "all video files were chosen"
 
-while True:
-	game_mode_message = morS_comm.dataReceive("(.*mor_on.*) | (.*mor_off.*)") #message from Quest Control Panel
-
-	if game_mode_message == "mor_on":
-		print "..."
+def main_cycle():
+	while True:
 		pygame.init() #initialize pygame
 		screen = pygame.display.set_mode((morS_video_setup.WIDTH,morS_video_setup.HEIGHT), FULLSCREEN) #create the screen
 		pygame.mouse.set_visible(False)
 		screen.fill((0,0,0)) # fill the screen black
+		
+		game_mode_message = morS_comm.dataReceive(".*") #message from Quest Control Panel
+		while True:
+			morS_video_setup.processEvents()
+			if game_mode_message == "mor_on":
+				print "..."
 
-		while distanceMeasurement() >= float(5): #wait til people come close enough to table
-			print "Measuring...."
-			events = pygame.event.get()
+				while distanceMeasurement() >= float(5): #wait til people come close enough to table
+					if morS_comm.dataReceive(".*") == "mor_off":
+						return
+					else:
+						print "Measuring...."
+						pass
+					morS_video_setup.processEvents()
+		 
+				print "\nLET'S GAME BEGINS!!!!"
+
+				morS_video_setup.videoPlayback(name_start) #run video before game start
+						
+				GPIO.output(outArduino_1, True)
+				GPIO.output(outArduino_2, True)
+
+				print "WAITING FOR PLAYERS SUCCESS"
+				while not (GPIO.input(inArduino_1) == 1 and GPIO.input(inArduino_2) == 1):
+					if morS_comm.dataReceive(".*") == "mor_off":
+						return
+					else: 
+						pass
+					morS_video_setup.processEvents()
 			
-			#process other events
-			for event in events:
-				mods = pygame.key.get_mods()
-				if event.type == QUIT: quit()
-				if event.type == KEYDOWN:
-					if event.key == K_F10 and mods & pygame.KMOD_RSHIFT and mods & pygame.KMOD_CTRL:
-						quit() 
- 
-		print "\nLET'S GAME BEGINS!!!!"
+				morS_video_setup.videoPlayback(name_end) #run video after game	
+				print "\nYOU WON THE GAME!!!!"
+				GPIO.output(27, GPIO.HIGH) #short relay in open state
 
-		morS_video_setup.videoPlayback(name_start) #run video before game start
-				
-		GPIO.output(outArduino_1, True)
-		GPIO.output(outArduino_2, True)
 
-		print "\nYOU WON THE GAME!!!!"
-		if (GPIO.input(inArduino_1) == 0 and GPIO.input(inArduino_2) == 0):
-			morS_video_setup.videoPlayback(name_end) #run video after game	
-		print "\nReady to receive commands from bomb"
-	
-		bomb_state_massage = morS_comm.dataReceive("(.*win.*) | (.*lose.*) ") #message from Bomb
+				print "\nReady to receive commands from bomb"
+			
+				bomb_state_massage = morS_comm.dataReceive("(.*win.*) | (.*lose.*) ") #message from Bomb
 
-		if bomb_state_massage == "win":
-			morS_video_setup.videoPlayback(name_win) #run video if bomb was disarmed
-			print "\nBOMB DISARMED!!!! CONGRATULATIONS"
-			break
-		elif bomb_state_massage == "lose":
-			morS_video_setup.videoPlayback(name_win) #run video if bomd exploded
-			print "\nBOMB EXPLODED!!!!"
-			break
+				if bomb_state_massage == "win":
+					morS_video_setup.videoPlayback(name_win) #run video if bomb was disarmed
+					print "\nBOMB DISARMED!!!! CONGRATULATIONS"
+					return
+				elif bomb_state_massage == "lose":
+					morS_video_setup.videoPlayback(name_win) #run video if bomd exploded
+					print "\nBOMB EXPLODED!!!!"
+					return
 
-	elif game_mode_message == "mor_off":
-		break
+			elif game_mode_message == "mor_off":
+				return
+
+main_cycle()
 
 print "FINISH"
 morS_video_setup.fillScreen((0,0,0))
