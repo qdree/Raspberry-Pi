@@ -5,7 +5,7 @@ ECHO = 24
 inArduino_1 = 14
 inArduino_2 = 15
 outArduino_1 = 22
-outArduino_2 = 27
+outArduino_2 = 4
 
 GPIO.setup(TRIG, GPIO.OUT)
 GPIO.setup(ECHO, GPIO.IN)
@@ -36,7 +36,7 @@ def distanceMeasurement():
 	return distance
 
 
-pipes = [[0xAB, 0xCD, 0xAB, 0xCD, 0x71], [0xF0, 0xF0, 0xF0, 0xF0, 0xE1], [0xF0, 0xF0, 0xF0, 0xF0, 0xE2]]
+pipes = [[0xAB, 0xCD, 0xAB, 0xCD, 0x83], [0xAB, 0xCD, 0xAB, 0xCD, 0x85]] 
 radio.begin(0,17)
 radio.setRetries(0,15)
 radio.setPayloadSize(25)
@@ -51,8 +51,6 @@ radio.openWritingPipe(pipes[1])
 radio.openReadingPipe(1, pipes[0])
 radio.startListening()
 radio.printDetails()
-
-#input_name = raw_input("Input name:")
 
 video_lang = morS_comm.dataReceive("(.*english.*) | (.*german.*)")
 

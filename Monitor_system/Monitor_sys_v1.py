@@ -3,7 +3,7 @@ from monitorInit import *
 mon_video_setup = VideoSetup()
 mon_comm = Communication()
 
-pipes = [[0xAB, 0xCD, 0xAB, 0xCD, 0x71], [0xF0, 0xF0, 0xF0, 0xF0, 0xE1], [0xF0, 0xF0, 0xF0, 0xF0, 0xE2]]
+pipes = [[0xAB, 0xCD, 0xAB, 0xCD, 0x82], [0xAB, 0xCD, 0xAB, 0xCD, 0x86], [0xAB, 0xCD, 0xAB, 0xCD, 0x85]]
 radio.begin(0,17)
 radio.setRetries(0,15)
 radio.setPayloadSize(25)
@@ -51,13 +51,6 @@ while True:
 	print "..."
 	
 	while not mon_comm.dataReceive(".*OnHand.*", ackPL1) == "onhand": #wait correct message
-		# events = pygame.event.get() 
-		# # process other events
-		# for event in events:
-		# 	mods = pygame.key.get_mods()
-		# 	if event.type == KEYDOWN:
-		# 		if event.key == K_F10 and mods & pygame.KMOD_RSHIFT and mods & pygame.KMOD_CTRL: #program exit combination
-		# 			quit()
 		mon_video_setup.processEvents()
 				
 	radio.writeAckPayload(1, ackPL1, len(ackPL1)) #send acknowledgement about OnHand operation
@@ -71,13 +64,6 @@ while True:
 	radio.openWritingPipe(pipes[2])
 
 	while not mon_comm.dataTransmit("timer_start"):
-		# events = pygame.event.get() 
-		# # process other events
-		# for event in events:
-		# 	mods = pygame.key.get_mods()
-		# 	if event.type == KEYDOWN:
-		# 		if event.key == K_F10 and mods & pygame.KMOD_RSHIFT and mods & pygame.KMOD_CTRL: #program exit combination
-		# 			quit()
 		mon_video_setup.processEvents()
 	break
 
