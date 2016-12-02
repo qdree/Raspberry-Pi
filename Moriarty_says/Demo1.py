@@ -2,10 +2,10 @@ from morSaysInit import *
 
 TRIG = 23 
 ECHO = 24
-inArduino_1 = 14
-inArduino_2 = 15
-outArduino_1 = 22
-outArduino_2 = 4
+inArduino_1 = 20
+inArduino_2 = 21
+outArduino_1 = 26
+outArduino_2 = 19
 
 GPIO.setup(TRIG, GPIO.OUT)
 GPIO.setup(ECHO, GPIO.IN)
@@ -36,7 +36,7 @@ def distanceMeasurement():
 	return distance
 
 
-pipes = [[0xAB, 0xCD, 0xAB, 0xCD, 0x83], [0xAB, 0xCD, 0xAB, 0xCD, 0x85]] 
+pipes = [[0xAB, 0xCD, 0xAB, 0xCD, 0x83], [0xAB, 0xCD, 0xAB, 0xCD, 0x85]]
 radio.begin(0,17)
 radio.setRetries(0,15)
 radio.setPayloadSize(25)
